@@ -4,8 +4,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.jsoup.nodes.Element;
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class futurelearn {
 
@@ -20,19 +23,22 @@ public class futurelearn {
 	public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 		// TODO Auto-generated method stub
 		String url1 = "https://www.futurelearn.com/courses";
-		
-		 
-		ArrayList pgcrs = new ArrayList<String>(); //Array which will store each course URLs 
+				 
+		ArrayList<String> pgcrs = new ArrayList<String>(); //Array which will store each course URLs 
 		pgcrs.add(url1);
 		 
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
-		java.sql.Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/scrapedcourse","root","");
 		//make sure you create a database named scrapedcourse in your local mysql database before running this code
-		//default mysql database in your local machine is ID:root with no password
+		
+		//connection to localhost
+		//default mysql database in local machine is ID:root with no password
+		java.sql.Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/scrapedcourse","root","");
+		
 		for(int a=0; a<pgcrs.size();a++)
 		{
 			String furl = (String) pgcrs.get(a);
-			Document doc = Jsoup.connect(furl).get();
+			//connect to url with timeout(0) to set infinite time to timeout
+			Document doc = Jsoup.connect(furl).timeout(0).get();
 			Elements ele = doc.select("li[class^=media]");
 			Elements crspg = ele.select("h2[class^=title]");
 			Elements link = crspg.select("a");
@@ -48,20 +54,23 @@ public class futurelearn {
 				SCrsDesrpTemp = SCrsDesrpTemp.replace("'", "''");
 				SCrsDesrpTemp = SCrsDesrpTemp.replace(",", "");
 				String CrsImg  = doc.select("a[class=media_image] > img").get(j).attr("src"); //To get the course image 
-				
-				Document crsdoc = Jsoup.connect(crsurl).get();
+				//connect to url with timeout(0) to set infinite time to timeout
+				Document crsdoc = Jsoup.connect(crsurl).timeout(0).get();
 				//Elements crsheadele = crsdoc.select("section[class=course-header clearfix]");
-				String youtube = crsdoc.select("div[class=video-step-container] > iframe").attr("src"); //Youtube link
+				String video = crsdoc.select("div[class=video-step-container] > iframe").attr("src"); //Youtube link
 				//Elements crsbodyele = crsdoc.select("section[class=course-detail clearfix]");
 				String CrsDes = crsdoc.select("div[class=course-description] > section[class=small]").text(); //Course Description Element
 				if(CrsDes.contains("?"))
 				{
 					CrsDes = CrsDes.replace("?", "");
 				}
-				
+				String university = crsdoc.select("div[class=meta] > a > img").attr("alt");
+				university = university.contains("'") ? university.replace("'", "''"): university;
+						
 				String courseId = crsdoc.select("article").attr("id").substring(7);
 				String profImg = crsdoc.select("div[class=educator] > a > img").attr("src");
 				String profName = crsdoc.select("div[class=educator] > a > img").attr("alt");
+				profName = profName.contains("'") ? profName.replace("'", "''"): profName;
 				
 				Elements findDuration = crsdoc.select("ul[class=list] > li > p");
 				
@@ -75,23 +84,37 @@ public class futurelearn {
 				{
 					StrDate = findDuration.get(0).select("time").attr("datetime");
 				}
-				if(youtube.length() > 0)
+				if(video.length() > 0)
 				{
-					youtube = "http:" + youtube;
+					video = "http:" + video;
 				} 
 				else {
-					youtube = "n/a";
+					video = "n/a";
 				}
 				String crsduration = findDuration.get(1).text().substring(findDuration.get(1).text().indexOf(':')+2, findDuration.get(1).text().indexOf(':')+3); //Get class duration and remove "Duration : "
-				String dataQuery = "INSERT INTO `scrapedcourse`.`course_data` (`id`, `title`, `short_desc`, `long_desc`, `course_link`, `video_link`, `start_date`, `course_length`, `course_image`, `category`, `site`) VALUES(NULL,'"+CourseName+"','"+SCrsDesrpTemp+"','"+CrsDes+"','"+crsurl+"','"+youtube+"','"+StrDate+"','"+crsduration+"','"+CrsImg+"','','FutureLearn')";
-				String detailsQuery = "INSERT INTO `scrapedcourse`.`coursedetails` (`id`,`profname`, `profimage`, `course_id`) VALUES(3,'" + profName + "', '" + profImg + "', '" + courseId + "')";
-//				System.out.println(dataQuery);       
-//				System.out.println(detailsQuery);       
-//				statement.executeUpdate(dataQuery); 
-//				statement.executeUpdate(detailsQuery);
-				String query = "INSERT INTO `scrapedcourse`.`data` (`id`, `title`, `short_desc`, `long_desc`, `course_link`, `video_link`, `start_date`, `course_length`, `course_image`, `category`, `site`, `profname`, `profimage`, `course_id`) VALUES (NULL,'"+CourseName+"','"+SCrsDesrpTemp+"','"+CrsDes+"','"+crsurl+"','"+youtube+"','"+StrDate+"','"+crsduration+"','"+CrsImg+"','','FutureLearn','" + profName + "', '" + profImg + "', '" + courseId + "')";
-				System.out.println(query);
-				statement.executeUpdate(query);
+				
+				//get time scrapped
+				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+				Calendar cal = Calendar.getInstance();
+				String time_scraped = dateFormat.format(cal.getTime());
+				String dataQuery = "INSERT INTO `scrapedcourse`.`course_data` (`id`, `title`, `short_desc`, `long_desc`, `course_link`, `video_link`, `start_date`, `course_length`, `course_image`, `category`, `site`, `course_fee`, `language`, `certificate`, `university`, `time_scraped`) " +
+																		"VALUES(NULL,'"+CourseName+"','"+SCrsDesrpTemp+"','"+CrsDes+"','"+crsurl+"','"+video+"','"+StrDate+"','"+crsduration+"','"+CrsImg+"','','FutureLearn', '0', 'English', 'yes', '" + university + "','" + time_scraped + "')";
+				
+				//insert course data into course_data
+				System.out.println(dataQuery);           
+				statement.executeUpdate(dataQuery); 
+
+				//get id of row inserted in course_data
+				ResultSet keys = statement.getGeneratedKeys();    
+				keys.next();  
+				int id = keys.getInt(1);
+				
+				String detailsQuery = "INSERT INTO `scrapedcourse`.`coursedetails` (`id`,`profname`, `profimage`, `course_id`) VALUES('" + courseId +"','" + profName + "', '" + profImg + "','" + id + "')";
+				
+				//insert prof data into course details
+				System.out.println(detailsQuery);   
+				statement.executeUpdate(detailsQuery);
+				
 				statement.close(); 
 			 }
 		}
