@@ -40,7 +40,8 @@ public class Edx extends MOOCSchool{
                 course.setCourseTitle(topData[1]);
 
                 Element courseURLElement = data.select("a").first();
-                course.setCourseURL(courseURLElement.attr("href"));
+                String courseURL = courseURLElement.attr("href");
+                course.setCourseURL(courseURL);
 
                 Elements startDateElement = element.select("li.first");
                 course.setStartDate(startDateElement.text().split(":")[1]);
@@ -56,7 +57,30 @@ public class Edx extends MOOCSchool{
 
                 Element imgUrlElement = element.select("img").first();
                 course.setImageUrl(imgUrlElement.attr("src"));
-
+                
+                Document longDescriptionPage = Jsoup.connect(courseURL).get();
+                
+                String longDescription = longDescriptionPage.select("div.course-detail-about").first().text();
+                course.setLongDescription(longDescription);
+                
+                Element videoUrlElement = longDescriptionPage.select("div.course-detail-video").first();
+                Elements videoUrlElements =  videoUrlElement.select("a");
+                if(videoUrlElements.size()!=0)
+                    course.setVideoURL(videoUrlElement.select("a").first().attr("href"));
+                
+                Element lengthElement = longDescriptionPage.select("div.course-detail-length").first();
+                if(lengthElement!=null)
+                    course.setCourseLength(lengthElement.text().split(":")[1]);
+                else
+                    course.setCourseLength("Unknown");
+                
+                Elements certElements = longDescriptionPage.select("div.course-how-take-verified");
+                if(certElements.size()!=0)
+                    course.setCertificate("Yes");
+                else
+                    course.setCertificate("No");
+                
+                                
                 courses.add(course);
             }
         }

@@ -34,6 +34,7 @@ public class MOOCDynasty {
         test.addSchool("https://www.edx.org/course-list/allschools/allsubjects/allcourses?page=8");
         test.addSchool("https://www.edx.org/course-list/allschools/allsubjects/allcourses?page=9");
 	test.addSchool("https://www.edx.org/course-list/allschools/allsubjects/allcourses?page=10");
+        
         test.run();
         
         test.printResults();
