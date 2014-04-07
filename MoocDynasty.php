@@ -9,6 +9,21 @@
 				font: 100%/140% Arial, Helvetica, sans-serif;
 			}
 			
+			.container {
+				width: 1200px;
+				margin: auto;
+			}
+			
+			/* logo
+			-------------------------------------- */
+			#logo {
+				float: left; 
+				font-size: 30px; 
+				margin-left: 30px;
+				width: 30%;
+			}
+			
+			
 			/* search form 
 			-------------------------------------- */
 			.searchform {
@@ -17,6 +32,7 @@
 				*display: inline;
 				border: solid 1px #d2d2d2;
 				padding: 3px 5px;
+				margin: -10px 0 20px 0;
 
 				-webkit-border-radius: 2em;
 				-moz-border-radius: 2em;
@@ -72,9 +88,6 @@
 			
 			/* table 
 			-------------------------------------- */
-			table {
-				margin: auto;
-			}
 			thead {
 				color: white;
 				background-color: #1b1b1b;
@@ -112,18 +125,20 @@
 			}
 			.profimg img {
 				border: 1px black solid;
+				width: 100px;
+				height: 100px;
 			}
 			
 		</style>
 	</head>
 	<body id="dt_example">
 		<div class="container" id="container">
-		<div style="float: left; font-size: 30px; margin-left: 30px;">MOOC Dynasty</div>
-		<div class="container2" style="width: 300px; margin: 0 auto;">
-		<form class="searchform" style="margin-bottom: 20px;">
-			<input class="searchfield" type="text" value="Search..." onfocus="if (this.value == 'Search...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search...';}">
-			<input class="searchbutton" type="button" value="Go">
-		</form>
+		<div class="header">
+			<div id="logo" style="">MOOC Dynasty</div>
+			<form class="searchform">
+				<input class="searchfield" type="text" value="Search..." onfocus="if (this.value == 'Search...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search...';}">
+				<input class="searchbutton" type="button" value="Go">
+			</form>
 		</div>
 			<?php
 				$mysqli = mysqli_connect("localhost", "root", "", "scrapedcourse");
@@ -133,7 +148,7 @@
 								<tr>
 									<th>Image</th>
 									<th>Course Name</th>
-									<th>Category</th>
+									<!--th>Category</th-->
 									<th>Start Date</th>
 									<th>Course Length(Weeks)</th>
 									<th>Professor(s)</th>
@@ -144,11 +159,10 @@
 							<tbody>";
 				while($row = mysqli_fetch_array($raw_results1)) {
 					$raw_results2 = $mysqli->query("SELECT * FROM `coursedetails` where `course_id`=".$row['id']);
-					"SELECT * FROM coursedetails where 'course_id'="+$row['id'];
 					$results .="<tr>
 									<td class='course_image'><a href=\"".$row['course_link']."\" target=\"_blank\"><img src='".$row['course_image']."'/></a></td>
 									<td><a href=\"".$row['course_link']."\" target=\"_blank\">".$row['title']."</a></td>
-									<td>".$row['category']."</td>
+									<!--td>".$row['category']."</td-->
 									<td>".$row['start_date']."</td>
 									<td>".$row['course_length']."</td>";
 					while($row2 = mysqli_fetch_array($raw_results2)) {
