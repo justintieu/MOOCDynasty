@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class futurelearn {
+public class FutureLearn {
 
 	/**
 	 * @param args
@@ -21,14 +21,12 @@ public class futurelearn {
 	 * @throws SQLException 
 	 */
 	public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
-		// TODO Auto-generated method stub
 		String url1 = "https://www.futurelearn.com/courses";
 				 
-		ArrayList<String> pgcrs = new ArrayList<String>(); //Array which will store each course URLs 
+		ArrayList<String> pgcrs = new ArrayList<String>(); 
 		pgcrs.add(url1);
 		 
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
-		//make sure you create a database named scrapedcourse in your local mysql database before running this code
 		
 		//connection to localhost
 		//default mysql database in local machine is ID:root with no password
