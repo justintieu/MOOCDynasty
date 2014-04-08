@@ -54,7 +54,10 @@ public class Edx extends MOOCSchool{
                 String numtitle = data.text();
                 String[] topData = numtitle.split(":");
                 course.setCourseNumber(topData[0]);
-                course.setCourseTitle(topData[1]);
+                String courseTitle = topData[1];
+				courseTitle = courseTitle.contains("'") ? courseTitle.replace("'", "''") : courseTitle;
+				courseTitle = courseTitle.contains("?") ? courseTitle.replace("?", "") : courseTitle;
+                course.setCourseTitle(courseTitle);
 
                 Element courseUrlElement = data.select("a").first();
                 String courseURL = courseUrlElement.attr("href");
@@ -63,9 +66,7 @@ public class Edx extends MOOCSchool{
                 Elements startDateElement = element.select("li.first");
                 String startDate;
                 if(startDateElement.text().split(":")[1].contains("self-paced")) {
-                	DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            		Calendar cal = Calendar.getInstance();
-            		startDate = df.format(cal.getTime());
+            		startDate = "0000-00-00";
                 } else if(startDateElement.text().split(":")[1].contains("Quarter")) {
 	                String[] date = startDateElement.text().split(":")[1].split(" ");
                 	if(date[0].equals("1st")) {
@@ -98,7 +99,8 @@ public class Edx extends MOOCSchool{
 
                 Element descriptionElement = element.select("div.subtitle").first();
                 String shortDesc = descriptionElement.text();
-                shortDesc = shortDesc.replace("'", "''");
+                shortDesc = shortDesc.contains("'") ? shortDesc.replace("'", "''") : shortDesc;
+                shortDesc = shortDesc.contains("?") ? shortDesc.replace("?", "") : shortDesc;
                 course.setShortDescription(shortDesc);
 
                 Element imgUrlElement = element.select("img").first();
@@ -108,7 +110,8 @@ public class Edx extends MOOCSchool{
                 
                 Elements longDescElement = coursePage.select("div[class=course-section course-detail-about] > div");
                 String longDesc = longDescElement.text();
-                longDesc = longDesc.replace("'", "''");
+                longDesc = longDesc.contains("'") ? longDesc.replace("'", "''") : longDesc;
+                longDesc = longDesc.contains("?") ? longDesc.replace("?", "") : longDesc;
                 course.setLongDescription(longDesc);
                 
                 if(coursePage.select("div[class=course-detail-video]").text().length() == 0) {

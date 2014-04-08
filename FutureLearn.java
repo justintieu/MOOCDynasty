@@ -34,7 +34,8 @@ public class FutureLearn extends MOOCSchool {
 				Course course = new Course();
 				
 				String courseTitle = crspg.get(j).text();
-				courseTitle = courseTitle.replace("'", "''");
+				courseTitle = courseTitle.contains("'") ? courseTitle.replace("'", "''") : courseTitle;
+				courseTitle = courseTitle.contains("?") ? courseTitle.replace("?", "") : courseTitle;
 				course.setCourseTitle(courseTitle);
 				
 				String courseUrl = "https://www.futurelearn.com" +link.get(j).attr("href"); //Get the Course Url from href tag
@@ -42,8 +43,8 @@ public class FutureLearn extends MOOCSchool {
 				
 				
 				String shortDesc = doc.select("p[class=introduction").get(j).text();	//Get short course description
-				shortDesc = shortDesc.replace("'", "''");
-				shortDesc = shortDesc.replace(",", "");
+                shortDesc = shortDesc.contains("'") ? shortDesc.replace("'", "''") : shortDesc;
+                shortDesc = shortDesc.contains("?") ? shortDesc.replace("?", "") : shortDesc;
 				course.setShortDescription(shortDesc);
 				
 				String imageUrl = doc.select("a[class=media_image] > img").get(j).attr("src"); //To get the course image 
@@ -55,10 +56,8 @@ public class FutureLearn extends MOOCSchool {
 				course.setVideoURL(videoURL);
 				
 				String longDesc = crsdoc.select("div[class=course-description] > section[class=small]").text(); //Course Description Element
-				if(longDesc.contains("?"))
-				{
-					longDesc = longDesc.replace("?", "");
-				}
+                longDesc = longDesc.contains("'") ? longDesc.replace("'", "''") : longDesc;
+                longDesc = longDesc.contains("?") ? longDesc.replace("?", "") : longDesc;
 				course.setLongDescription(longDesc);
 				
 				String school = crsdoc.select("div[class=meta] > a > img").attr("alt");
