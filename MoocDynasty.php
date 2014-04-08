@@ -142,7 +142,7 @@
 		</div>
 			<?php
 				$mysqli = mysqli_connect("localhost", "root", "", "scrapedcourse");
-				$raw_results1 = $mysqli->query("SELECT * FROM course_data");
+				$raw_results1 = $mysqli->query("SELECT * FROM course_data order by rand()");
 
 				$results = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"display\" id=\"searchTable\"><thead>
 								<tr>
@@ -159,12 +159,14 @@
 							<tbody>";
 				while($row = mysqli_fetch_array($raw_results1)) {
 					$raw_results2 = $mysqli->query("SELECT * FROM `coursedetails` where `course_id`=".$row['id']);
+					$startDate = $row['start_date']=="0000-00-00" ? "Self Paced" : $row['start_date'];
+					$courseLength = $row['course_length']=="0" ? "Self Paced" : $row['course_length'];
 					$results .="<tr>
 									<td class='course_image'><a href=\"".$row['course_link']."\" target=\"_blank\"><img src='".$row['course_image']."'/></a></td>
 									<td><a href=\"".$row['course_link']."\" target=\"_blank\">".$row['title']."</a></td>
 									<!--td>".$row['category']."</td-->
-									<td>".$row['start_date']."</td>
-									<td>".$row['course_length']."</td>";
+									<td>".$startDate."</td>
+									<td>".$courseLength."</td>";
 					while($row2 = mysqli_fetch_array($raw_results2)) {
 						$results .="<td>".$row2['profname']."</td>
 									<td class=\"profimg\"><img src='".$row2['profimage']."'/></td>";
