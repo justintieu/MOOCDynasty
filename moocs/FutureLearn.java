@@ -47,13 +47,13 @@ public class FutureLearn extends MOOCSchool {
                 shortDesc = shortDesc.contains("?") ? shortDesc.replace("?", "") : shortDesc;
 				course.setShortDescription(shortDesc);
 				
-				String imageUrl = doc.select("a[class=media_image] > img").get(j).attr("src"); //To get the course image 
-				course.setImageUrl(imageUrl);
-				
 				Document crsdoc = Jsoup.connect(courseUrl).timeout(0).get();
 				String videoURL = crsdoc.select("div[class=video-step-container] > iframe").attr("src"); //Youtube link
 				videoURL = videoURL.length() > 0 ? "http:" + videoURL : "n/a";
 				course.setVideoURL(videoURL);
+				
+				String imageUrl = crsdoc.select("div[class=hero] > img").attr("src"); //To get the course image 
+				course.setImageUrl(imageUrl);
 				
 				String longDesc = crsdoc.select("div[class=course-description] > section[class=small]").text(); //Course Description Element
                 longDesc = longDesc.contains("'") ? longDesc.replace("'", "''") : longDesc;
@@ -69,7 +69,33 @@ public class FutureLearn extends MOOCSchool {
 				
 				String instructors = crsdoc.select("div[class=educator] > a > img").attr("alt");
 				instructors = instructors.contains("'") ? instructors.replace("'", "''"): instructors;
-				course.setInstructors(instructors);
+				instructors = instructors.contains("  ") ? instructors.replace("  ", " "): instructors;
+				String[] listOfInstructors = instructors.split(" ");
+				if(listOfInstructors.length == 2) {
+					course.setInstructors(instructors);
+				} else if (listOfInstructors.length == 3) {
+					if(listOfInstructors[2].contains("(")) {
+						course.setInstructors(listOfInstructors[0] + " " + listOfInstructors[1]);
+					} else {
+						course.setInstructors(instructors);
+					}
+				} else if(listOfInstructors.length == 4) {
+					instructors = listOfInstructors[0] + " ";
+					for(int i = 1; i < listOfInstructors.length; i++) {
+						instructors = listOfInstructors[i].contains("(") || listOfInstructors[i].contains(")") ? instructors : instructors +  listOfInstructors[i] + " ";
+					}
+					course.setInstructors(instructors);
+				} else {
+					if(instructors.contains(",")) {
+						course.setInstructors(instructors.split(",")[0]);
+					} else if (instructors.contains("&")) {
+						course.setInstructors(instructors.split("&")[0]);
+					} else if (instructors.contains(":")) {
+						course.setInstructors(instructors.split(":")[1]);
+					} else {
+						course.setInstructors("error");
+					}
+				}
 				
 				String instructorsImage = crsdoc.select("div[class=educator] > a > img").attr("src");
 				course.setInstructorsImage(instructorsImage);

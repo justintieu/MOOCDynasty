@@ -78,6 +78,14 @@ public class Edx extends MOOCSchool{
                 	} else {
                 		startDate = "2014-10-01";
                 	}
+                } else if(startDateElement.text().split(":")[1].contains("Q1")) {
+            		startDate = "2014-01-01";
+                } else if(startDateElement.text().split(":")[1].contains("Q2")) {
+            		startDate = "2014-04-01";
+                } else if(startDateElement.text().split(":")[1].contains("Q3")) {
+            		startDate = "2014-07-01";
+                } else if(startDateElement.text().split(":")[1].contains("Q4")) {
+            		startDate = "2014-10-01";
                 } else {
 	                String[] date = startDateElement.text().split(":")[1].split(" ");
 	                if(date[1].length() > 2) {
@@ -95,7 +103,159 @@ public class Edx extends MOOCSchool{
 
                 Element schoolElement = element.select("li").get(2);
                 String school = schoolElement.text();
-                course.setSchool(school.substring(0, school.length()-1));
+                switch(school) {
+                	case "MIT":
+            			school = "Massachusetts Institute of Technology";
+            			break;
+                	case "MITx":
+            			school = "Massachusetts Institute of Technology";
+            			break;
+	                case "HarvardX":
+	                	school = "Harvard";
+	                	break;
+	                case "UC BerkeleyX":
+	                	school = "UC Berkeley";
+	                	break;
+	                case "UTAustinX":
+                		school = "The University of Texas System";
+                		break;
+	                case "ANU":
+	                	school = "Australian National University";
+	                	break;
+	                case "ANUx":
+	                	school = "Australian National University";
+	                	break;
+	                case "BUx":
+	                	school = "Boston University";
+	                	break;
+	                case "DelftX":
+	                	school = "Delft University of Technology";
+	                	break;
+                	case "UQx":
+                		school = "The University of Queensland";
+                		break;
+                	case "BerkleeX":
+                		school = "Berklee College of Music";
+                		break;
+                	case "CaltechX":
+                		school = "Caltech";
+                		break;
+                	case "ColumbiaX":
+                		school = "Columbia";
+                		break;
+                	case "CornellX":
+                		school = "Cornell University";
+                		break;
+                	case "DartmouthX":
+                		school = "Darmouth";
+                		break;
+                	case "DavidsonX":
+                		school = "Davidson College";
+                		break;
+                	case "EPFLx":
+            			school = "Ecole Polytechnique Federale de Lausanne";
+            			break;
+                	case "ETHx":
+                		school = "ETH Zurich";
+                		break;
+                	case "GeorgetownX":
+                		school = "Georgetown University";
+                		break;
+                	case "HKUSTx":
+                		school = "Hong Kong University of Science and Technology";
+                		break;
+                	case "IITBombayX":
+                		school = "IIT Bombay";
+                		break;
+                	case "KIx":
+                		school = "Karolinska Institutet";
+                		break;
+                	case "KyotoUx":
+                		school = "Kyoto University";
+                		break;
+                	case "McGillX":
+                		school = "McGill";
+                		break;
+                	case "PekingX":
+                		school = "Peking University";
+                		break;
+                	case "RiceX":
+                		school = "Rice University";
+                		break;
+                	case "SNUx":
+                		school = "Seoul National University";
+                		break;
+                	case "TUMx":
+                		school = "Technische Universitat Munchen";
+                		break;
+                	case "TsinghuaX":
+                		school = "Tsinghua University";
+                		break;
+                	case "LouvainX":
+                		school = "Universite Catholique de Louvain";
+                		break;
+                	case "UChicagoX":
+                		school = "The University of Chicago";
+                		break;
+                	case "HKUx":
+                		school = "The University of Hong Kong";
+                		break;
+                	case "UTokyoX":
+                		school = "The University of Tokyo";
+                		break;
+                	case "University of TorontoX":
+                		school = "University of Toronto";
+                		break;
+                	case "UWashingtonX":
+                		school = "University of Washington";
+                		break;
+                	case "WellesleyX":
+                		school = "Wellesley College";
+                		break;
+                	case "edX":
+                		school = "edX";
+                		break;
+                	case "ColgateX":
+                		school = "Colgate University";
+                		break;
+                	case "GEMSx":
+                		school = "GEMS Education";
+                		break;
+                	case "HamiltonX":
+                		school = "Hamilton";
+                		break;
+                	case "IDBx":
+                		school = "Inter-American Development Bank";
+                		break;
+                	case "IMFx":
+                		school = "International Monetary Fund";
+                		break;
+                	case "SmithsonianX":
+                		school = "Smithsonian Institution";
+                		break;
+                	case "LBGx":
+                		school = "Learning by Giving";
+                		break;
+                	case "LinuxFoundationX":
+                		school = "Linux Foundation";
+                		break;
+                	case "OCWCx":
+                		school = "OCW Consortium";
+                		break;
+                	case "OsakaUx":
+                		school = "Osaka University";
+                		break;
+                	case "UAMx":
+                		school = "Universidad Autonoma de Madrid";
+                		break;
+                	case "MexicoX":
+                		school = "Ministry of Education of Mexico";
+                		break;
+                	default:
+                		school = "Unknown school: " + school;
+                		break;
+                }
+                course.setSchool(school);
 
                 Element descriptionElement = element.select("div.subtitle").first();
                 String shortDesc = descriptionElement.text();
@@ -156,9 +316,30 @@ public class Edx extends MOOCSchool{
         		String timeScrapped = dateFormat.format(cal.getTime());
         		course.setTimeScrapped(timeScrapped);
         		
-        		course.info();
         		addCourse(course);
             }
         }
     }
+
+    @Override
+    public void parseCategories(String url, String category) throws IOException {
+        Document web = Jsoup.connect(url).get();
+        Elements elements = web.select("div.views-row");
+        //System.out.println(elements);
+        for(Element element: elements){
+            Course course = new Course();
+
+            Elements data = element.select("h2.title");
+
+            String numtitle = data.text();
+            String[] topData = numtitle.split(":");
+            course.setCourseNumber(topData[0]);
+            String courseTitle = topData[1];
+			courseTitle = courseTitle.contains("'") ? courseTitle.replace("'", "''") : courseTitle;
+			courseTitle = courseTitle.contains("?") ? courseTitle.replace("?", "") : courseTitle;
+
+    		updateCourse(courseTitle, category);
+        }
+    }
+
 }

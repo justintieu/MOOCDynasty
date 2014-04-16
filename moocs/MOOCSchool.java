@@ -24,7 +24,7 @@ public class MOOCSchool {
                 
         if(useDatabase==true){
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            connection = DriverManager.getConnection("jdbc:mysql://localhost/scrapedcourse","root","");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost/moocs160?useUnicode=true&characterEncoding=UTF-8","root","");
         }
     }
     
@@ -77,14 +77,14 @@ public class MOOCSchool {
 	}
 	
 	public void addCourse(Course course) {
+		System.out.println("Adding " + course.getCourseTitle() + "...");
 		this.courses.add(course);
 	}
     
     public boolean addToDatabase(Course c) throws SQLException{
-        
         Statement statement = connection.createStatement();
-		
-        String courseDataQuery = "INSERT INTO `scrapedcourse`.`course_data` (`id`, `title`, `short_desc`, `long_desc`, `course_link`, `video_link`, `start_date`, `course_length`, `course_image`, `category`, `site`, `course_fee`, `language`, `certificate`, `university`, `time_scraped`) VALUES(NULL,'"
+        
+        String courseDataQuery = "INSERT INTO `course_data` (`id`, `title`, `short_desc`, `long_desc`, `course_link`, `video_link`, `start_date`, `course_length`, `course_image`, `category`, `site`, `course_fee`, `language`, `certificate`, `university`, `time_scraped`) VALUES(NULL,'"
 					                +c.getCourseTitle()		+ "','"
 					                +c.getShortDescription()+ "','"
 					                +c.getLongDescription()	+ "','"
@@ -93,7 +93,7 @@ public class MOOCSchool {
 					                +c.getStartDate()		+ "','"
 					                +c.getCourseLength()	+ "','"
 					                +c.getImageUrl()		+ "','"
-					                +""						+ "','" 
+					                +c.getCategory()		+ "','" 
 					                +c.getSiteName()		+ "','"
 					                +c.getCourseFee()		+ "','"
 					                +c.getLanguage()		+ "','"
@@ -108,7 +108,7 @@ public class MOOCSchool {
 		keys.next();  
 		int id = keys.getInt(1);
         
-        String courseDetailsQuery = "INSERT INTO `scrapedcourse`.`coursedetails` (`id`,`profname`, `profimage`, `course_id`) VALUES('" 
+        String courseDetailsQuery = "INSERT INTO `coursedetails` (`id`,`profname`, `profimage`, `course_id`) VALUES('" 
         							+ id 						+ "','" 
     								+ c.getInstructors() 		+ "', '" 
     								+ c.getInstructorsImage() 	+ "','" 
@@ -127,6 +127,22 @@ public class MOOCSchool {
     public void parsePages(ArrayList<String> pages) throws IOException{
     
     }
+	
+	public void parseCategories(String url, String category) throws IOException {
+		
+	}
+	
+	public void updateCourse(String title, String category) {
+		for(Course c: courses) {
+			if(c.getCourseTitle().equals(title)) {
+				if(c.getCategory().length() > 1 && !c.getCategory().contains(category)) {
+					c.setCategory(c.getCategory() + "/" + category);
+				} else {
+					c.setCategory(category);
+				}
+			}
+		}
+	}
     
     public void queryCourses(ArrayList<Course> courses) {
     	for(Course course : courses) {

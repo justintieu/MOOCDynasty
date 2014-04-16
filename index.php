@@ -1,3 +1,49 @@
+<?php
+	require_once("connect.php");
+	
+	if($_SERVER["REQUEST_METHOD"] == "POST") {
+		$search = $_POST["search"];
+		$raw_results1 = $mysqli->query("SELECT * FROM course_data where title like '%".$search."%' or short_desc like '%".$search."%' or long_desc like '%".$search."%' ORDER BY title ASC");
+	} 
+	if($_SERVER["REQUEST_METHOD"] != "POST" || $raw_results->num_rows == 0) {
+		$raw_results1 = $mysqli->query("SELECT * FROM course_data ORDER BY id ASC");
+	}
+
+	$results = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"display\" id=\"searchTable\"><thead>
+					<tr>
+						<th>ID</th>
+						<th>Image</th>
+						<th>Course Name</th>
+						<th>Category</th>
+						<th>Start Date</th>
+						<th>Course Length(Weeks)</th>
+						<th>Professor(s)</th>
+						<th>Instructor Image</th>
+						<th>Site</th>
+					</tr>
+				</thead>
+				<tbody>";
+	while($row = mysqli_fetch_array($raw_results1)) {
+		$raw_results2 = $mysqli->query("SELECT * FROM `coursedetails` where `course_id`=".$row['id']);
+		$startDate = $row['start_date']=="0000-00-00" ? "Self Paced" : $row['start_date'];
+		$courseLength = $row['course_length']=="0" ? "Self Paced" : $row['course_length'];
+		$results .="<tr>
+						<td>".$row['id']."</td>
+						<td class='course_image'><a href=\"".$row['course_link']."\" target=\"_blank\"><img src='".$row['course_image']."'/></a></td>
+						<td><a href=\"".$row['course_link']."\" target=\"_blank\">".$row['title']."</a></td>
+						<td>".$row['category']."</td>
+						<td>".$startDate."</td>
+						<td>".$courseLength."</td>";
+		while($row2 = mysqli_fetch_array($raw_results2)) {
+			$results .="<td>".$row2['profname']."</td>
+						<td class=\"profimg\"><img src='".$row2['profimage']."'/></td>";
+		}
+		$results .= "<td>".$row['site']."</td>
+					</tr>";
+	}
+	
+	$results.="</tbody></table>";
+?>
 <!DOCTYPE>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -140,44 +186,7 @@
 				<input class="searchbutton" type="button" value="Go">
 			</form>
 		</div>
-			<?php
-				$mysqli = mysqli_connect("localhost", "root", "", "scrapedcourse");
-				$raw_results1 = $mysqli->query("SELECT * FROM course_data order by rand()");
-
-				$results = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"display\" id=\"searchTable\"><thead>
-								<tr>
-									<th>Image</th>
-									<th>Course Name</th>
-									<!--th>Category</th-->
-									<th>Start Date</th>
-									<th>Course Length(Weeks)</th>
-									<th>Professor(s)</th>
-									<th>Instructor Image</th>
-									<th>Site</th>
-								</tr>
-							</thead>
-							<tbody>";
-				while($row = mysqli_fetch_array($raw_results1)) {
-					$raw_results2 = $mysqli->query("SELECT * FROM `coursedetails` where `course_id`=".$row['id']);
-					$startDate = $row['start_date']=="0000-00-00" ? "Self Paced" : $row['start_date'];
-					$courseLength = $row['course_length']=="0" ? "Self Paced" : $row['course_length'];
-					$results .="<tr>
-									<td class='course_image'><a href=\"".$row['course_link']."\" target=\"_blank\"><img src='".$row['course_image']."'/></a></td>
-									<td><a href=\"".$row['course_link']."\" target=\"_blank\">".$row['title']."</a></td>
-									<!--td>".$row['category']."</td-->
-									<td>".$startDate."</td>
-									<td>".$courseLength."</td>";
-					while($row2 = mysqli_fetch_array($raw_results2)) {
-						$results .="<td>".$row2['profname']."</td>
-									<td class=\"profimg\"><img src='".$row2['profimage']."'/></td>";
-				 	}
-					$results .= "<td>".$row['site']."</td>
-								</tr>";
-				}
-				
-				$results.="</tbody></table>";
-				echo $results;
-			?>
+			<?php echo $results; ?>
 		</div>
 	</body>
 </html>
