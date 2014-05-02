@@ -15,7 +15,7 @@ public class MOOCDynasty {
      */
     public static void main(String[] args) throws IOException, InstantiationException, ClassNotFoundException, IllegalAccessException, SQLException{        
 //    	long startTime = System.currentTimeMillis();
-    	MOOCSchool fl = new FutureLearn("FutureLarn", "www.futurelearn.com", true);
+    	MOOCSchool fl = new FutureLearn("FutureLarn", "www.futurelearn.com", true); 
         fl.addCourses("https://www.futurelearn.com/courses");
         fl.parsePages(fl.getCoursePages());
         fl.queryCourses(fl.getCourses());

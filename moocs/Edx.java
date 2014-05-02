@@ -65,7 +65,7 @@ public class Edx extends MOOCSchool{
 
                 Elements startDateElement = element.select("li.first");
                 String startDate;
-                if(startDateElement.text().split(":")[1].contains("self-paced")) {
+                if(startDateElement.text().split(":")[1].toLowerCase().contains("self-paced")) {
             		startDate = "0000-00-00";
                 } else if(startDateElement.text().split(":")[1].contains("Quarter")) {
 	                String[] date = startDateElement.text().split(":")[1].split(" ");

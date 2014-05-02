@@ -24,7 +24,7 @@ public class MOOCSchool {
                 
         if(useDatabase==true){
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            connection = DriverManager.getConnection("jdbc:mysql://localhost/moocs160?useUnicode=true&characterEncoding=UTF-8","root","");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost/scrapedcourse?characterSetResults=UTF-8&useUnicode=true&characterEncoding=UTF-8","root","");
         }
     }
     
