@@ -1,0 +1,51 @@
+#rating #hide {
+    display:none;
+}
+ 
+.rating input {
+    position:absolute;
+    filter:alpha(opacity=0);
+    -moz-opacity:0;
+    -khtml-opacity:0;
+    opacity:0;
+    cursor:pointer;
+    width:17px;
+}
+.block1 #rating {
+	margin-top: -20px;
+}
+#rating span.nostar{
+	background: url('stars.png') no-repeat 0 0;
+}
+#rating span {
+    width:24px;
+    height:16px;
+    line-height:16px;
+    padding:1px 22px 1px 0; /* 1px FireFox fix */
+    background:url('stars.png') no-repeat -22px 0;
+	display: inline;
+}
+ 
+/* Change span immediately following the checked radio */
+ 
+#rating input:checked + span {
+    background-position:-22px 0;
+}
+ 
+/* Reset all remaining stars back to default background.
+   This supersedes the above due to its ordering. */
+ 
+#rating input:checked + span ~ span {
+    background-position:0 0;
+}
+#blocks > .inside  > div > div {
+	padding: 10px;
+}
+.error {
+	padding: 10px;
+	color: red;
+	text-align: center;
+}
+label {
+	font-weight: bold;
+}

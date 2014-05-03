@@ -1,4 +1,161 @@
-<?php	require_once("connect.php");	if($_SERVER["REQUEST_METHOD"] == "POST") {		$search = $_POST["search"];		$raw_results1 = $mysqli->query("SELECT * FROM course_data where title like '%".$search."%' or short_desc like '%".$search."%' or long_desc like '%".$search."%' ORDER BY title ASC");	} 
-	if($_SERVER["REQUEST_METHOD"] != "POST" || $raw_results->num_rows == 0) {		$raw_results1 = $mysqli->query("SELECT * FROM course_data ORDER BY id ASC");	}
-	$results = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"display\" id=\"searchTable\"><thead>					<tr>						<th>Sort By: </th>						<th>Course Name</th>						<th>Category</th>						<th>Start Date</th>						<th>Course Length(Weeks)</th>						<th>Professor(s)</th>						<th>Instructor Image</th>						<th>Site</th>					</tr>				</thead>				<tbody>";	while($row = mysqli_fetch_array($raw_results1)) {		$raw_results2 = $mysqli->query("SELECT * FROM `coursedetails` where `course_id`=".$row['id']);		$startDate = $row['start_date']=="0000-00-00" ? "Self Paced" : $row['start_date'];		$courseLength = $row['course_length']=="0" ? "Self Paced" : $row['course_length'];		$results .="<tr>						<td class='course_image'><a href=\"course.php?id=".$row['id']."\" target=\"_blank\"><img src='".$row['course_image']."'/></a></td>						<td><a href=\"course.php?id=".$row['id']."\" target=\"_blank\">".$row['title']."</a></td>						<td>".$row['category']."</td>						<td>".$startDate."</td>						<td>".$courseLength."</td>";		while($row2 = mysqli_fetch_array($raw_results2)) {			$results .="<td>".$row2['profname']."</td>						<td class=\"profimg\"><img src='".$row2['profimage']."'/></td>";		}		$results .= "<td>".$row['site']."</td>					</tr>";	}	$results.="</tbody></table>";?><!DOCTYPE><html>	<head>		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>		<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>		<script src="//datatables.net/download/build/nightly/jquery.dataTables.js"></script>		<script>			$(document).ready( function () {				var table = $('#searchTable').DataTable();			} );		</script>        <link href="//datatables.net/download/build/nightly/jquery.dataTables.css" rel="stylesheet" type="text/css" />		<link rel="stylesheet" type="text/css" href="main.css">
-	</head>	<body>		<div class="container" id="container">			<div class="header">				<div id="logo"><a href="#">MOOC Dynasty</a></div>				<!--form class="searchform">					<input class="searchfield" type="text" value="Search..." onFocus="if (this.value == 'Search...') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Search...';}">					<input class="searchbutton" type="button" value="Go">				</form-->			</div>			<?php echo $results; ?>		</div>	</body></html>
+<?php	
+	session_start();
+	require_once("connect.php");
+	$sql = "SELECT * FROM `averagerating` ORDER BY avgrate DESC LIMIT 7";
+	$raw_results = $mysqli->query($sql);
+	$topseven = array();
+	$id = 1;
+	while($row = mysqli_fetch_array($raw_results)) 
+	{	
+		
+		$sql = "SELECT * FROM `course_data` WHERE id='".$row['course_id']."'";
+		$raw_results2 = $mysqli->query($sql);
+		while($row2 = mysqli_fetch_array($raw_results2)) {
+			$topseven[$id]['title'] = (strlen($row2['title']) > 32) ? substr($row2['title'],0,32)."..." : $row2['title'];
+			$topseven[$id]['image'] = $row2['course_image'];
+		}
+		$topseven[$id]['course_id'] = $row['course_id'];
+		$star_rating = "";
+		switch(floor($row['rating']/$row['numvotes'])) {
+			case 0:
+				$star_rating.="<div name='rating' id='rating' class='rating'>";
+				$star_rating.="<span class='nostar'></span>";
+				$star_rating.="<span class='nostar'></span>";
+				$star_rating.="<span class='nostar'></span>";
+				$star_rating.="<span class='nostar'></span>";
+				$star_rating.="<span class='nostar'></span>";
+				$star_rating.="</div>";
+				break;
+			case 1:
+				$star_rating.="<div name='rating' id='rating' class='rating'>";
+				$star_rating.="<span></span>";
+				$star_rating.="<span class='nostar'></span>";
+				$star_rating.="<span class='nostar'></span>";
+				$star_rating.="<span class='nostar'></span>";
+				$star_rating.="<span class='nostar'></span>";
+				$star_rating.="</div>";
+				break;
+			case 2:
+				$star_rating.="<div name='rating' id='rating' class='rating'>";
+				$star_rating.="<span></span>";
+				$star_rating.="<span></span>";
+				$star_rating.="<span class='nostar'></span>";
+				$star_rating.="<span class='nostar'></span>";
+				$star_rating.="<span class='nostar'></span>";
+				$star_rating.="</div>";
+				break;
+			case 3:
+				$star_rating.="<div name='rating' id='rating' class='rating'>";
+				$star_rating.="<span></span>";
+				$star_rating.="<span></span>";
+				$star_rating.="<span></span>";
+				$star_rating.="<span class='nostar'></span>";
+				$star_rating.="<span class='nostar'></span>";
+				$star_rating.="</div>";
+				break;
+			case 4:
+				$star_rating.="<div name='rating' id='rating' class='rating'>";
+				$star_rating.="<span></span>";
+				$star_rating.="<span></span>";
+				$star_rating.="<span></span>";
+				$star_rating.="<span></span>";
+				$star_rating.="<span class='nostar'></span>";
+				$star_rating.="</div>";
+				break;
+			case 5:
+				$star_rating.="<div name='rating' id='rating' class='rating'>";
+				$star_rating.="<span></span>";
+				$star_rating.="<span></span>";
+				$star_rating.="<span></span>";
+				$star_rating.="<span></span>";
+				$star_rating.="<span></span>";
+				$star_rating.="</div>";
+				break;
+			default: 
+				$star_rating = "error";
+				break;
+		}
+		$topseven[$id]['rating'] = $star_rating;
+		$id++;
+	}	
+?>
+<!DOCTYPE HTML>
+<html>
+	<head>
+	<title>MoocDynasty</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="rate.css" />
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$('.searchfield').autocomplete({source:'suggestcourse.php', minLength:2});
+	});
+	</script>
+	</head>
+
+	<body>
+		<div id="header">
+			<div class="inside">
+				<a href="index.php" class="logo">MoocDynasty</a>																													
+				<p class="slogan">Helping people find courses every day!</p>
+			</div>
+			<div id="menu">
+				<ul>
+					<li class="current_page_item"><a href="index.php">Homepage</a></li>
+					<li><a href="courses.php">View All Courses</a></li>
+					<li><a href="about.php">About Us</a></li>
+					 <?php
+						if(isset($_SESSION['id'])) {
+							echo "<li><a href=\"user.php?id=".$_SESSION['id']."\">Profile</a></li>";
+							echo "<li><a href=\"logout.php\">Log Out</a></li>";
+						} else {
+							echo "<li><a href=\"login.php\">Login</a></li>";
+							echo "<li><a href=\"register.php\">Register</a></li>";
+						}
+					?>		
+				</ul>
+			</div>
+			<div class="banner">
+				<div class="title">
+					<h2>Search for your course now!</h2>
+					<form action="search.php" action="GET" class="searchform" id="searchform">
+						<input name="searchfield" id="searchfield" class="searchfield" type="text" placeholder="Search..." />
+						<input class="searchbutton" type="submit" value="Go"/>
+					</form>
+				</div>
+			</div>
+		 </div>
+		 <div id="blocks">
+			<div class="title">
+				<h2>Top 7 Courses</h2>
+			</div>
+			<div class="inside">
+				<a href="course.php?id=<?php echo $topseven[1]['course_id']; ?>">
+					<div class="numone">
+						<h3>1. <?php echo $topseven[1]['title']; ?></h3>
+						<?php echo $topseven[1]['rating']; ?>
+						<img src="<?php echo $topseven[1]['image']; ?>" alt="" width="500px" height="325px"/>
+					</div>
+				</a>
+				<?php 
+					for($i = 2; $i <= 7; $i++) {
+						echo "<a href=\"course.php?id=".$topseven[$i]['course_id']."\"><div class=\"block1\">";
+						echo "<h3>".$i.". ".$topseven[$i]['title']."</h3><br/>";
+						echo $topseven[$i]['rating'];
+						echo "<img src=\"".$topseven[$i]['image']."\" alt=\"\" width=\"250px\" height=\"75px\"/>";
+						echo "</div></a>";
+					}
+				?>
+			</div>
+		 </div>
+		 <div id="footer">
+			<div class="inside">
+				<p>MoocDynasty &copy; 2014   | SJSU CS160</p>
+			</div>
+		 </div>
+	</body>
+</html>

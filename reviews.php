@@ -1,7 +1,7 @@
 <?php
 	session_start();
 ?>
-<!DOCTYPE>
+ <!DOCTYPE>
 <html>
 <head>
 <title>MoocDynasty</title>
@@ -32,67 +32,6 @@
 					$professors = array();
 					$profname = "";
 					$profimage = "";
-					$rating = "";
-					$star_rating = "";
-					
-					$sql = "SELECT * FROM averagerating WHERE course_id=".$row['id'];
-					if($result = $mysqli->query($sql)) {
-						while($r = mysqli_fetch_array($result)) {
-							$rating = $r['avgrate'];
-						}
-					}
-					
-					switch($rating) {
-						case 1:
-							$star_rating.="<div style='float: right; margin: 5px 140px 0px 0px;' name='rating' id='rating' class='rating'>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span class=\'nostar\'></span>";
-							$star_rating.="<span class=\'nostar\'></span>";
-							$star_rating.="<span class=\'nostar\'></span>";
-							$star_rating.="<span class=\'nostar\'></span>";
-							$star_rating.="</div>";
-							break;
-						case 2:
-							$star_rating.="<div style='float: right; margin: 5px 140px 0px 0px;' name='rating' id='rating' class='rating'>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span class=\'nostar\'></span>";
-							$star_rating.="<span class=\'nostar\'></span>";
-							$star_rating.="<span class=\'nostar\'></span>";
-							$star_rating.="</div>";
-							break;
-						case 3:
-							$star_rating.="<div style='float: right; margin: 5px 140px 0px 0px;' name='rating' id='rating' class='rating'>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span class=\'nostar\'></span>";
-							$star_rating.="<span class=\'nostar\'></span>";
-							$star_rating.="</div>";
-							break;
-						case 4:
-							$star_rating.="<div style='float: right; margin: 5px 140px 0px 0px;' name='rating' id='rating' class='rating'>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span class=\'nostar\'></span>";
-							$star_rating.="</div>";
-							break;
-						case 5:
-							$star_rating.="<div style='float: right; margin: 5px 140px 0px 0px;' name='rating' id='rating' class='rating'>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span></span>";
-							$star_rating.="</div>";
-							break;
-						default: 
-							$star_rating = "unrated";
-							break;
-					}
-					
 					
 					$raw_results2 = $mysqli->query("SELECT * FROM `coursedetails` where `course_id`=".$row['id']);
 					while($row2 = mysqli_fetch_array($raw_results2)) {
@@ -166,32 +105,11 @@
 		<div id="course-block">
 			<div class="course">
 				<div class="title"><h2><?php echo $title_sec; ?></h2></div>
-				<div class="course-info left">
-					<ul class="list">
-						<li><span class="label"><a href="<?php echo $course_link; ?>"><?php echo $site; ?> - course page</a></span> </li>
-						<li><span class="label">University:</span> <?php echo $university; ?></li>
-						<li><span class="label">Start Date:</span> <?php echo $start_date; ?></li>
-						<li><span class="label">Course Length:</span> <?php if($course_length == '0') {echo "Self-paced";} else {echo $course_length." weeks"; } ?></li>
-						<li><span class="label">Course Rating:</span> <?php echo $star_rating ?></li>
-						<?php if(strlen($category) > 1) echo "<li><span class=\"label\">Category:</span> ".$category."</li>"; ?>
-						<li><span class="label">Educator:</span> 
-							<table>
-							 <?php
-								for($i = 0; $i < count($professors); $i++) {
-									echo "<tr>";
-									echo "<td class=\"profname\">". $professors[$i]['profname'] ."</td>";
-									echo "<td class=\"profimg\"><div><img style=\"border: 1px solid black; width: 100px; \" src=\"". $professors[$i]['profimage'] ."\" /></td>";
-									echo "</tr>";
-								}
-							 ?>
-							</table>
-						</li>
-					</ul>
+				<div class="course-info ">
 					<?php
 						if(isset($_SESSION['id'])) {
 							echo "<div class=\"buttons\">";
 							echo "<a href=\"rate.php?id=".$course_id."\" class=\"coursebutton\">rate this course</a> "; 
-							echo "<a href=\"addcourse.php?id=".$course_id."\" target=\"_blank\" class=\"coursebutton\">add course to profile</a>";
 							echo "</div>";
 						}
 					?>
@@ -226,9 +144,9 @@
 					</div>
 					<script type="text/javascript">
 						$(document).ready(function(){
-							for( var i = 0; i < $('.review .rating').length; i++) {						
+							for( var i = 0; i < $('.rating').length; i++) {						
 								var star_rating = "<div style='float: right;' name='rating' id='rating' class='rating'>";
-								switch($('.review .rating')[i].innerHTML) {
+								switch($('.rating')[i].innerHTML) {
 									case "1":
 										star_rating=star_rating+"<span></span>";
 										star_rating=star_rating+"<span class=\'nostar\'></span>";
@@ -271,12 +189,11 @@
 								}
 								star_rating=star_rating+"</div>";
 								$('#rating-'+i).replaceWith(star_rating);
+								console.log("replacing #rating-" + i + " " + star_rating);
 							}
 						});	
 					</script>
 				</div>
-				<div class="video right"><?php echo $video_sec; ?></div>
-				<div class="description right"><span class="label">Course Description</span><hr/><?php echo $long_desc; ?></div>
 			</div>
 		</div>
 		<div style="clear: both;"></div>
