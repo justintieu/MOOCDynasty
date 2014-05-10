@@ -12,7 +12,11 @@
 		$raw_results2 = $mysqli->query($sql);
 		while($row2 = mysqli_fetch_array($raw_results2)) {
 			$topseven[$id]['title'] = (strlen($row2['title']) > 32) ? substr($row2['title'],0,32)."..." : $row2['title'];
-			$topseven[$id]['image'] = $row2['course_image'];
+			if(substr($row2['course_image'],0,4)=== "http") {
+				$topseven[$id]['image'] = $row2['course_image'];
+			} else {
+				$topseven[$id]['image'] = "http://".$row2['course_image'];
+			}
 		}
 		$topseven[$id]['course_id'] = $row['course_id'];
 		$star_rating = "";
@@ -82,14 +86,14 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-	<title>MoocDynasty</title>
+	<title>Home | MoocDynasty</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 
-	<link rel="stylesheet" type="text/css" href="style.css" />
-	<link rel="stylesheet" type="text/css" href="rate.css" />
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<link rel="stylesheet" type="text/css" href="css/rate.css" />
 	<script type="text/javascript">
 	$(document).ready(function(){
 		$('.searchfield').autocomplete({source:'suggestcourse.php', minLength:2});
@@ -111,6 +115,7 @@
 					 <?php
 						if(isset($_SESSION['id'])) {
 							echo "<li><a href=\"user.php?id=".$_SESSION['id']."\">Profile</a></li>";
+							echo "<li><a href=\"settings.php\">Settings</a></li>";
 							echo "<li><a href=\"logout.php\">Log Out</a></li>";
 						} else {
 							echo "<li><a href=\"login.php\">Login</a></li>";

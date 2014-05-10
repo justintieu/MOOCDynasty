@@ -1,146 +1,100 @@
 <?php
 	session_start();
+	
+	include_once("connect.php");
+	if(isset($_GET["id"])) {
+		$course_id = $_GET["id"];
+	
+		$query = "SELECT * FROM `course_data` where id='".$course_id."'";
+		$raw_results = $mysqli->query($query);
+		while($row = mysqli_fetch_array($raw_results)) {
+			$title = $row['title'];
+			$site = $row['site'];
+			$course_link = $row['course_link'];
+			$long_desc = $row['long_desc'];
+			$image = $row['course_image'];
+			$video_link = $row['video_link'];
+			$university = $row['university'];
+			$start_date = $row['start_date']=="0000-00-00" ? "Self Paced" : $row['start_date'];		
+			$course_length = $row['course_length'];
+			$category = $row['category'];
+			$professors = array();
+			$profname = "";
+			$profimage = "";
+			$rating = "";
+			$star_rating = "";
+			
+			$sql = "SELECT * FROM averagerating WHERE course_id=".$row['id'];
+			if($result = $mysqli->query($sql)) {
+				while($r = mysqli_fetch_array($result)) {
+					$rating = floor($r['avgrate']);
+				}
+			}
+			$raw_results2 = $mysqli->query("SELECT * FROM `coursedetails` where `course_id`=".$row['id']);
+			while($row2 = mysqli_fetch_array($raw_results2)) {
+				$profimage = "";
+				if(substr($row2['profimage'],0,4)=== "http") {
+					$profimage = $row2['profimage'];
+				} else {
+					$profimage = "http://".$row2['profimage'];
+				}
+				$profname = $row2['profname'];
+				
+				$professors[] = array(
+					'profname' => $profname,
+					'profimage' => $profimage
+				);
+			}
+			
+			$title_sec = "<a href=\"".$course_link."\" target=\"_blank\">".strtoupper($title)."</a>";
+			$video_sec = "";
+			switch($row['site']) {
+				case "EDX":
+					$video_sec.= "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"".str_replace('watch?v=',"embed/",$video_link)."\" frameborder=\"0\" allowfullscreen></iframe>";
+					break;
+				case "iversity.org":
+					$video_sec.= "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"".$video_link."\" frameborder=\"0\" allowfullscreen></iframe>";
+					break;
+				case "FutureLearn":
+					$video_sec.="<span class=\"label\">Video</span><hr/><embed src=\"".$video_link."\" width=\"640\" height=\"360\"></embed>";
+					break;
+				case "coursera.org":
+					$video_sec.="<span class=\"label\">Video</span><hr/><embed src=\"".$video_link."\" autostart=\"false\" width=\"640\" height=\"360\"></embed>";
+					break;
+				case "Canvas":
+					break;
+				case "Open2Study":
+					$video_sec.= "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"http:".str_replace('watch?v=',"embed/",$video_link)."\" frameborder=\"0\" allowfullscreen></iframe>";
+					break;
+				case "NovoEd":
+					$video_sec.= "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"".$video_link."\" frameborder=\"0\" allowfullscreen></iframe>";
+					break;
+				case "Udacity":
+					$video_sec.= "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"".str_replace('watch?v=',"embed/",$video_link)."\" frameborder=\"0\" allowfullscreen></iframe>";
+					break;
+				default:
+					break;
+			}
+			if($video_link === "n/a" || $video_link == "") {
+				$video_sec = "<img src=\"".$image."\" width=640px;/>";
+			} else if (substr($video_link,0,17) == "http://vimeo.com/") {
+				$video_sec = "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"http://player.vimeo.com/video/".substr($video_link,18,strlen($video_link))."\" frameborder=\"0\" allowfullscreen></iframe>";
+			}
+		}
+	} else {
+		header("Location: courses.php");
+	}
 ?>
 <!DOCTYPE>
 <html>
 <head>
-<title>MoocDynasty</title>
+<title><?php echo $title; ?> | MoocDynasty</title>
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-<link rel="stylesheet" type="text/css" href="style.css" />
-<link rel="stylesheet" type="text/css" href="rate.css" />
-<link rel="stylesheet" type="text/css" href="course.css" />
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<link rel="stylesheet" type="text/css" href="css/course.css" />
+<link rel="stylesheet" type="text/css" href="css/rate.css" />
 	</head>
 	<body>
-		<?php
-			include_once("connect.php");
-			if(isset($_GET["id"])) {
-				$course_id = $_GET["id"];
-			
-				$query = "SELECT * FROM `course_data` where id='".$course_id."'";
-				$raw_results = $mysqli->query($query);
-				while($row = mysqli_fetch_array($raw_results)) {
-					$title = $row['title'];
-					$site = $row['site'];
-					$course_link = $row['course_link'];
-					$long_desc = $row['long_desc'];
-					$image = $row['course_image'];
-					$video_link = $row['video_link'];
-					$university = $row['university'];
-					$start_date = $row['start_date']=="0000-00-00" ? "Self Paced" : $row['start_date'];		
-					$course_length = $row['course_length'];
-					$category = $row['category'];
-					$professors = array();
-					$profname = "";
-					$profimage = "";
-					$rating = "";
-					$star_rating = "";
-					
-					$sql = "SELECT * FROM averagerating WHERE course_id=".$row['id'];
-					if($result = $mysqli->query($sql)) {
-						while($r = mysqli_fetch_array($result)) {
-							$rating = $r['avgrate'];
-						}
-					}
-					
-					switch($rating) {
-						case 1:
-							$star_rating.="<div style='float: right; margin: 5px 140px 0px 0px;' name='rating' id='rating' class='rating'>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span class=\'nostar\'></span>";
-							$star_rating.="<span class=\'nostar\'></span>";
-							$star_rating.="<span class=\'nostar\'></span>";
-							$star_rating.="<span class=\'nostar\'></span>";
-							$star_rating.="</div>";
-							break;
-						case 2:
-							$star_rating.="<div style='float: right; margin: 5px 140px 0px 0px;' name='rating' id='rating' class='rating'>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span class=\'nostar\'></span>";
-							$star_rating.="<span class=\'nostar\'></span>";
-							$star_rating.="<span class=\'nostar\'></span>";
-							$star_rating.="</div>";
-							break;
-						case 3:
-							$star_rating.="<div style='float: right; margin: 5px 140px 0px 0px;' name='rating' id='rating' class='rating'>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span class=\'nostar\'></span>";
-							$star_rating.="<span class=\'nostar\'></span>";
-							$star_rating.="</div>";
-							break;
-						case 4:
-							$star_rating.="<div style='float: right; margin: 5px 140px 0px 0px;' name='rating' id='rating' class='rating'>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span class=\'nostar\'></span>";
-							$star_rating.="</div>";
-							break;
-						case 5:
-							$star_rating.="<div style='float: right; margin: 5px 140px 0px 0px;' name='rating' id='rating' class='rating'>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span></span>";
-							$star_rating.="<span></span>";
-							$star_rating.="</div>";
-							break;
-						default: 
-							$star_rating = "unrated";
-							break;
-					}
-					
-					
-					$raw_results2 = $mysqli->query("SELECT * FROM `coursedetails` where `course_id`=".$row['id']);
-					while($row2 = mysqli_fetch_array($raw_results2)) {
-						$profname = $row2['profname'];
-						$profimage = $row2['profimage'];
-						
-						$professors[] = array(
-							'profname' => $row2['profname'] ,
-							'profimage' => $row2['profimage']
-						);
-								}
-					
-					$title_sec = "<a href=\"".$course_link."\" target=\"_blank\">".strtoupper($title)."</a>";
-					$video_sec = "";
-					switch($row['site']) {
-						case "EDX":
-							$video_sec.= "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"".str_replace('watch?v=',"embed/",$video_link)."\" frameborder=\"0\" allowfullscreen></iframe>";
-							break;
-						case "iversity.org":
-							$video_sec.= "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"".$video_link."\" frameborder=\"0\" allowfullscreen></iframe>";
-							break;
-						case "FutureLearn":
-							$video_sec.="<span class=\"label\">Video</span><hr/><embed src=\"".$video_link."\" width=\"640\" height=\"360\"></embed>";
-							break;
-						case "coursera.org":
-							$video_sec.="<span class=\"label\">Video</span><hr/><embed src=\"".$video_link."\" autostart=\"false\" width=\"640\" height=\"360\"></embed>";
-							break;
-						case "Canvas":
-							break;
-						case "Open2Study":
-							$video_sec.= "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"http:".str_replace('watch?v=',"embed/",$video_link)."\" frameborder=\"0\" allowfullscreen></iframe>";
-							break;
-						case "NovoEd":
-							$video_sec.= "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"".$video_link."\" frameborder=\"0\" allowfullscreen></iframe>";
-							break;
-						default:
-							break;
-					}
-					if($video_link === "n/a" || $video_link == "") {
-						$video_sec = "<img src=\"".$image."\" width=640px;/>";
-					} else if (substr($video_link,0,17) == "http://vimeo.com/") {
-						$video_sec = "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"http://player.vimeo.com/video/".substr($video_link,18,strlen($video_link))."\" frameborder=\"0\" allowfullscreen></iframe>";
-					}
-				}
-			} else {
-				header("Location: courses.php");
-			}
-		 ?>
 		<div id="header">
 			<div class="inside">
 				<a href="index.php" class="logo">MoocDynasty</a>																													
@@ -172,7 +126,7 @@
 						<li><span class="label">University:</span> <?php echo $university; ?></li>
 						<li><span class="label">Start Date:</span> <?php echo $start_date; ?></li>
 						<li><span class="label">Course Length:</span> <?php if($course_length == '0') {echo "Self-paced";} else {echo $course_length." weeks"; } ?></li>
-						<li><span class="label">Course Rating:</span> <?php echo $star_rating ?></li>
+						<li><span class="label">Course Rating:</span> <div style="float: right; margin: 7px 135px 0px 0px;" class="rating" id="rating"><?php echo $rating ?></div></li>
 						<?php if(strlen($category) > 1) echo "<li><span class=\"label\">Category:</span> ".$category."</li>"; ?>
 						<li><span class="label">Educator:</span> 
 							<table>
@@ -207,7 +161,7 @@
 								echo "<div class='review'>";
 								$sql2 = "SELECT first, last from `users` where id=".$row['student_id'];
 								$results2 = $mysqli->query($sql2);
-								echo "<div class=\"rating\" id=\"rating-".$i."\">" . $row['rating'] . "</div>";
+								echo "<div style=\"float:right;\" class=\"rating\" id=\"rating\">" . $row['rating'] . "</div>";
 								if($row2 = mysqli_fetch_array($results2)) {
 									echo "by <label><a style='color: blue;' href=\"user.php?id=".$row['student_id']."\">".$row2['first']." ".substr($row2['last'],0,1).". </a></label>";
 								}
@@ -226,9 +180,9 @@
 					</div>
 					<script type="text/javascript">
 						$(document).ready(function(){
-							for( var i = 0; i < $('.review .rating').length; i++) {						
-								var star_rating = "<div style='float: right;' name='rating' id='rating' class='rating'>";
-								switch($('.review .rating')[i].innerHTML) {
+							for( var i = 0; i < $('.rating').length; i++) {						
+								var star_rating = "";
+								switch($('.rating')[i].innerHTML) {
 									case "1":
 										star_rating=star_rating+"<span></span>";
 										star_rating=star_rating+"<span class=\'nostar\'></span>";
@@ -258,7 +212,6 @@
 										star_rating=star_rating+"<span class=\'nostar\'></span>";
 										break;
 									case "5":
-										star_rating=star_rating+"<div name='rating' id='rating' class='rating'>";
 										star_rating=star_rating+"<span></span>";
 										star_rating=star_rating+"<span></span>";
 										star_rating=star_rating+"<span></span>";
@@ -266,11 +219,16 @@
 										star_rating=star_rating+"<span></span>";
 										break;
 									default:
-										console.log("error");
+										star_rating = "unrated";
 										break;
 								}
-								star_rating=star_rating+"</div>";
-								$('#rating-'+i).replaceWith(star_rating);
+								//$('.review .rating')[i].replaceWith(star_rating);
+								if(star_rating == "unrated") {
+									$('.rating').css("margin", "0px 206px 0px 0px");
+									$('.rating').html(star_rating);
+								} else {
+									$('.rating')[i].innerHTML = star_rating;
+								}
 							}
 						});	
 					</script>

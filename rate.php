@@ -7,10 +7,10 @@
 <!DOCTYPE>
 <html>
 <head>
-<title>MoocDynasty</title>
+<title>Rate | MoocDynasty</title>
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>		
-<link rel="stylesheet" type="text/css" href="style.css" />
-<link rel="stylesheet" type="text/css" href="rate.css" />
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<link rel="stylesheet" type="text/css" href="css/rate.css" />
 </head>
 
 <body>
@@ -27,6 +27,7 @@
 					 <?php
 						if(isset($_SESSION['id'])) {
 							echo "<li><a href=\"user.php?id=".$_SESSION['id']."\">Profile</a></li>";
+							echo "<li><a href=\"settings.php\">Settings</a></li>";
 							echo "<li><a href=\"logout.php\">Log Out</a></li>";
 						} else {
 							echo "<li><a href=\"login.php\">Login</a></li>";
@@ -122,28 +123,30 @@
 					$sql = "INSERT INTO `course_ratings` VALUES ('". $course."','". $title ."','". $rating."','". str_replace("'","''",$review)."', '".$_SESSION['id']."', '".(new \DateTime())->format('Y-m-d H:i:s')."')";
 					if($mysqli->query($sql)) {
 					} else {
-						echo "failed to insert into course_ratings";
+						echo "<script>console.log(failed to insert into course_ratings);</script>";
 					}
 					
 					$sql = "SELECT * FROM `averagerating` where course_id=".$course;
-					if($results= $mysqli->query($sql)) {
+					$results= $mysqli->query($sql);
+					if(mysqli_num_rows($results) > 0) {
 						while($row = mysqli_fetch_array($results)) {
-							$current_rating = $row['rating'];
-							$numvotes = $row['numvotes'];
-							$sql = "UPDATE `averagerating` SET rating=".($current_rating+$rating).", numvotes=".($numvotes+1)." where course_id=".$course;
+							$current_rating = $row['rating']+$rating;
+							$numvotes = $row['numvotes'] + 1;
+							$sql = "UPDATE `averagerating` SET rating=".($current_rating).", numvotes=".($numvotes).", avgrate=".($current_rating)/($numvotes)." where course_id=".$course;
 							if($mysqli->query($sql)) {
+							echo "<script>console.log('UPDATED IN DATABASE ".$sql."');</script>";
 							} else {
-								echo "failed to update averagerating<br/>".$sql;
+								echo "<script>console.log('failed to update averagerating ".$sql."');</script>";
 							}
 						}
 					} else {
-						$sql = "INSERT INTO `averagerating` VALUES(NULL,'".$course . "','". $rating ."','1')";
+						$sql = "INSERT INTO `averagerating` VALUES(NULL,'".$course . "','". $rating ."','1','".($rating/1)."')";
 						if($mysqli->query($sql)) {
+							echo "<script>console.log('INSERTED INTO DATABASE');</script>";
 						} else {
-							echo "failed to insert into averagerating";
+							echo "<script>console.log('failed to insert into averagerating');</script>";
 						}
 					}
-					
 					$script = "<script type=\"text/javascript\">$(\"#blocks>.inside\").html(\"<div style='text-align: center; margin-top: 50px;'><div><label>Thank you for rating the course:</label> <div>".$title."</div></div> <div><label>Rating:</label> ".$star_rating."</div><div><label>Review:</label> <div>".$review."</div></div></div>\");</script>";
 				} else {
 					$error = "<div class=\"error\">Please make sure have selected a rating and/or have a review of at least length 9.</div>";

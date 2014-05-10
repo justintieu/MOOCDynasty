@@ -1,85 +1,84 @@
 <?php
 	session_start();
+	
+	include_once("connect.php");
+	if(isset($_GET["id"])) {
+		$course_id = $_GET["id"];
+	
+		$query = "SELECT * FROM `course_data` where id='".$course_id."'";
+		$raw_results = $mysqli->query($query);
+		while($row = mysqli_fetch_array($raw_results)) {
+			$title = $row['title'];
+			$site = $row['site'];
+			$course_link = $row['course_link'];
+			$long_desc = $row['long_desc'];
+			$image = $row['course_image'];
+			$video_link = $row['video_link'];
+			$university = $row['university'];
+			$start_date = $row['start_date']=="0000-00-00" ? "Self Paced" : $row['start_date'];		
+			$course_length = $row['course_length'];
+			$category = $row['category'];
+			$professors = array();
+			$profname = "";
+			$profimage = "";
+			
+			$raw_results2 = $mysqli->query("SELECT * FROM `coursedetails` where `course_id`=".$row['id']);
+			while($row2 = mysqli_fetch_array($raw_results2)) {
+				$profname = $row2['profname'];
+				$profimage = $row2['profimage'];
+				
+				$professors[] = array(
+					'profname' => $row2['profname'] ,
+					'profimage' => $row2['profimage']
+				);
+						}
+			
+			$title_sec = "<a href=\"".$course_link."\" target=\"_blank\">".strtoupper($title)."</a>";
+			$video_sec = "";
+			switch($row['site']) {
+				case "EDX":
+					$video_sec.= "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"".str_replace('watch?v=',"embed/",$video_link)."\" frameborder=\"0\" allowfullscreen></iframe>";
+					break;
+				case "iversity.org":
+					$video_sec.= "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"".$video_link."\" frameborder=\"0\" allowfullscreen></iframe>";
+					break;
+				case "FutureLearn":
+					$video_sec.="<span class=\"label\">Video</span><hr/><embed src=\"".$video_link."\" width=\"640\" height=\"360\"></embed>";
+					break;
+				case "coursera.org":
+					$video_sec.="<span class=\"label\">Video</span><hr/><embed src=\"".$video_link."\" autostart=\"false\" width=\"640\" height=\"360\"></embed>";
+					break;
+				case "Canvas":
+					break;
+				case "Open2Study":
+					$video_sec.= "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"http:".str_replace('watch?v=',"embed/",$video_link)."\" frameborder=\"0\" allowfullscreen></iframe>";
+					break;
+				case "NovoEd":
+					$video_sec.= "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"".$video_link."\" frameborder=\"0\" allowfullscreen></iframe>";
+					break;
+				default:
+					break;
+			}
+			if($video_link === "n/a" || $video_link == "") {
+				$video_sec = "<img src=\"".$image."\" width=640px;/>";
+			} else if (substr($video_link,0,17) == "http://vimeo.com/") {
+				$video_sec = "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"http://player.vimeo.com/video/".substr($video_link,18,strlen($video_link))."\" frameborder=\"0\" allowfullscreen></iframe>";
+			}
+		}
+	} else {
+		header("Location: courses.php");
+	}
 ?>
  <!DOCTYPE>
 <html>
 <head>
-<title>MoocDynasty</title>
+<title><?php echo $title; ?>'s Reviews | MoocDynasty</title>
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-<link rel="stylesheet" type="text/css" href="style.css" />
-<link rel="stylesheet" type="text/css" href="rate.css" />
-<link rel="stylesheet" type="text/css" href="course.css" />
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<link rel="stylesheet" type="text/css" href="css/course.css" />
+<link rel="stylesheet" type="text/css" href="css/rate.css" />
 	</head>
 	<body>
-		<?php
-			include_once("connect.php");
-			if(isset($_GET["id"])) {
-				$course_id = $_GET["id"];
-			
-				$query = "SELECT * FROM `course_data` where id='".$course_id."'";
-				$raw_results = $mysqli->query($query);
-				while($row = mysqli_fetch_array($raw_results)) {
-					$title = $row['title'];
-					$site = $row['site'];
-					$course_link = $row['course_link'];
-					$long_desc = $row['long_desc'];
-					$image = $row['course_image'];
-					$video_link = $row['video_link'];
-					$university = $row['university'];
-					$start_date = $row['start_date']=="0000-00-00" ? "Self Paced" : $row['start_date'];		
-					$course_length = $row['course_length'];
-					$category = $row['category'];
-					$professors = array();
-					$profname = "";
-					$profimage = "";
-					
-					$raw_results2 = $mysqli->query("SELECT * FROM `coursedetails` where `course_id`=".$row['id']);
-					while($row2 = mysqli_fetch_array($raw_results2)) {
-						$profname = $row2['profname'];
-						$profimage = $row2['profimage'];
-						
-						$professors[] = array(
-							'profname' => $row2['profname'] ,
-							'profimage' => $row2['profimage']
-						);
-								}
-					
-					$title_sec = "<a href=\"".$course_link."\" target=\"_blank\">".strtoupper($title)."</a>";
-					$video_sec = "";
-					switch($row['site']) {
-						case "EDX":
-							$video_sec.= "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"".str_replace('watch?v=',"embed/",$video_link)."\" frameborder=\"0\" allowfullscreen></iframe>";
-							break;
-						case "iversity.org":
-							$video_sec.= "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"".$video_link."\" frameborder=\"0\" allowfullscreen></iframe>";
-							break;
-						case "FutureLearn":
-							$video_sec.="<span class=\"label\">Video</span><hr/><embed src=\"".$video_link."\" width=\"640\" height=\"360\"></embed>";
-							break;
-						case "coursera.org":
-							$video_sec.="<span class=\"label\">Video</span><hr/><embed src=\"".$video_link."\" autostart=\"false\" width=\"640\" height=\"360\"></embed>";
-							break;
-						case "Canvas":
-							break;
-						case "Open2Study":
-							$video_sec.= "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"http:".str_replace('watch?v=',"embed/",$video_link)."\" frameborder=\"0\" allowfullscreen></iframe>";
-							break;
-						case "NovoEd":
-							$video_sec.= "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"".$video_link."\" frameborder=\"0\" allowfullscreen></iframe>";
-							break;
-						default:
-							break;
-					}
-					if($video_link === "n/a" || $video_link == "") {
-						$video_sec = "<img src=\"".$image."\" width=640px;/>";
-					} else if (substr($video_link,0,17) == "http://vimeo.com/") {
-						$video_sec = "<span class=\"label\">Video</span><hr/><iframe width=\"640\" height=\"360\" src=\"http://player.vimeo.com/video/".substr($video_link,18,strlen($video_link))."\" frameborder=\"0\" allowfullscreen></iframe>";
-					}
-				}
-			} else {
-				header("Location: courses.php");
-			}
-		 ?>
 		<div id="header">
 			<div class="inside">
 				<a href="index.php" class="logo">MoocDynasty</a>																													
@@ -93,6 +92,7 @@
 					 <?php
 						if(isset($_SESSION['id'])) {
 							echo "<li><a href=\"user.php?id=".$_SESSION['id']."\">Profile</a></li>";
+							echo "<li><a href=\"settings.php\">Settings</a></li>";
 							echo "<li><a href=\"logout.php\">Log Out</a></li>";
 						} else {
 							echo "<li><a href=\"login.php\">Login</a></li>";
@@ -189,7 +189,7 @@
 								}
 								star_rating=star_rating+"</div>";
 								$('#rating-'+i).replaceWith(star_rating);
-								console.log("replacing #rating-" + i + " " + star_rating);
+								//console.log("replacing #rating-" + i + " " + star_rating);
 							}
 						});	
 					</script>

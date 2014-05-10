@@ -1,5 +1,5 @@
 <?php
-	session_start(); /* Starts the session for the user */
+	session_start();
 	if(isset($_SESSION['id'])) {
 		header("location: user.php?id".$_SESSION['id']);
 	}
@@ -29,22 +29,26 @@
 		if (strlen($_POST['email']) == 0){
 			$emailerror = "*";
 		} 
-		if (strlen($_POST['pass1']) == 0){
+		if (strlen($_POST['pass1']) < 9){
 			$pass1error = "*";
+			$error .= "Your password must be at least 9 characters long. ";
 		} 
 		if (strlen($_POST['pass2']) == 0){
 			$pass2error = "*";
 		} 
 		if($_POST['pass1'] !== $_POST['pass2']) {
+			$pass2error = "*";
 			$error .= "Your passwords do not match. ";
 		}
 		
-		if(strlen($_POST['pass1']) > 0 && strlen($_POST['pass2']) > 0 && $_POST['pass1'] === $_POST['pass2']) {
+		if(strlen($_POST['pass1']) >= 9 && strlen($_POST['pass2']) > 0 && $_POST['pass1'] === $_POST['pass2']) {
 			$pass = $_POST['pass1'];
 			
 			require_once("connect.php");
-			$stmt = $mysqli->prepare("INSERT INTO users VALUES(?,?,?,?,?)");
-			$stmt->bind_param('issss', $id, $first, $last, $email, $pass); 
+			$profileimage = "";
+			$bio = "Hi! My name is ".$first." and I am a new member to MoocDynasty. I hope to see you in one of my classes.";
+			$stmt = $mysqli->prepare("INSERT INTO users VALUES(?,?,?,?,?,?,?)");
+			$stmt->bind_param('issss', $id, $first, $last, $email, $pass, $bio, $profileimage); 
 			$stmt->execute();
 						
 			$results = mysqli_stmt_affected_rows($stmt);
@@ -69,9 +73,9 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>MoocDynasty</title>
+<title>Register | MoocDynasty</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="stylesheet" type="text/css" href="css/style.css" />
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>		
 </script>        
 </head>

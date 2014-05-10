@@ -21,10 +21,6 @@
 		} else {
 			$course_image = "http://".$row['course_image'];
 		}
-		/*$results .="<tr><td class='course_image'><a href=\"course.php?id=".$row['id']."\" target=\"_blank\"><img src='".$course_image."'/></a></td><td>".$row['id']."</td><td><a href=\"course.php?id=".
-		$row['id']."\" target=\"_blank\">".
-		$row['title']."</a></td><td>".$row['category']."</td><td>".$startDate."</td><td>".
-		$courseLength."</td>";		*/
 		while($row2 = mysqli_fetch_array($raw_results2)) 
 		{								
 			$prof_image = "";
@@ -34,10 +30,7 @@
 				$prof_image = "http://".$row2['profimage'];
 			}
 			$prof_name = $row2['profname'];
-			//$results .="<td>".$row2['profname']."</td><td class=\"profimg\"><img src='".$prof_image."'/></td>";		
 		}		
-		//$results .= "<td>".$row['site']."</td></tr>";	
-		
 		$course = array (
             '<a class="course_img" href="course.php?id=' . $id . '"><img src="' . $course_image . '" width="200px" height="150px" /></a>',  
             '<a class="course_img" href="course.php?id=' . $id . '">'.$row['title'].'</a>',

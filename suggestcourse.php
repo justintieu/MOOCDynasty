@@ -4,7 +4,6 @@
 	}
 	require_once("connect.php");
 	$sql = 'SELECT * FROM course_data where title like "'. $_REQUEST['term'] .'%" order by title asc limit 10';
-	//echo $sql;
 	$results = $mysqli->query($sql);
 	$data = array();
 	if ( $results && mysqli_num_rows($results) ) {

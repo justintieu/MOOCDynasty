@@ -19,9 +19,6 @@
 					if($_POST['pass'] === $row['password']) {
 						$_SESSION['id']=$row['id'];
 						$_SESSION['email'] = $row['email'];
-						//$error = "Login successful";
-						//header('Location: user.php?id='.$row['id']);
-						//header('Location: index.php');
 						$redirect = "<script>$(document).ready(function() {document.location = 'user.php?id=".$row['id']."'	});</script>";
 					} else {
 						$error = "Incorrect password.";
@@ -36,9 +33,9 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>MoocDynasty</title>
+<title>Login | MoocDynasty</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="stylesheet" type="text/css" href="css/style.css" />
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>		
 </script>        
 </head>

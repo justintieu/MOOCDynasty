@@ -4,9 +4,9 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>MoocDynasty</title>
+<title>About | MoocDynasty</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="stylesheet" type="text/css" href="css/style.css" />
 </head>
 
 <body>
@@ -23,6 +23,7 @@
 					 <?php
 						if(isset($_SESSION['id'])) {
 							echo "<li><a href=\"user.php?id=".$_SESSION['id']."\">Profile</a></li>";
+							echo "<li><a href=\"settings.php\">Settings</a></li>";
 							echo "<li><a href=\"logout.php\">Log Out</a></li>";
 						} else {
 							echo "<li><a href=\"login.php\">Login</a></li>";

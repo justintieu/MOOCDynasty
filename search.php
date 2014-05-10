@@ -15,13 +15,13 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-	<title>MoocDynasty</title>
+	<title>Search | MoocDynasty</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-	<link rel="stylesheet" type="text/css" href="style.css" />
-	<link rel="stylesheet" type="text/css" href="rate.css" />
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<link rel="stylesheet" type="text/css" href="css/rate.css" />
 	<script type="text/javascript">
 	$(document).ready(function(){
 		$('.searchfield').autocomplete({source:'suggestcourse.php', minLength:2});
@@ -43,6 +43,7 @@
 					 <?php
 						if(isset($_SESSION['id'])) {
 							echo "<li><a href=\"user.php?id=".$_SESSION['id']."\">Profile</a></li>";
+							echo "<li><a href=\"settings.php\">Settings</a></li>";
 							echo "<li><a href=\"logout.php\">Log Out</a></li>";
 						} else {
 							echo "<li><a href=\"login.php\">Login</a></li>";
@@ -72,22 +73,87 @@
 					echo "</h2></div>";
 					for($i = 0; $i < count($results); $i++) {
 						echo "<a href='course.php?id=".$results[$i][0]."'>";
-						echo "<div style='width: 700px; height: 200px; margin: 0 auto; border: 1px solid black;'>";
+						echo "<div style='width: 700px; min-height: 200px; margin: 0 auto; border: 1px solid black;'>";
 						echo "<div style='float:left; padding: 20px;'>";
 						echo "<img src='".$results[$i][1]."' width='150px' height='150px' />.";
-						echo "";
-						echo "</div>";
-						echo "<div style='float:right; width: 460px; padding: 20px;'>";
-						echo "<h3>".$results[$i][2]."</h3>";
-						echo $results[$i][3];
-						echo "</div>";
-						echo "</div>";
-						echo "</a>";
-						echo "<div style='clear:both;'></div>";
+						$sql = "SELECT * FROM `averagerating` WHERE id='".$results[$i][0]."'";
+						if($raw_results = $mysqli->query($sql)) {
+							while($row = mysqli_fetch_array($raw_results)) {	
+								$star_rating = "";
+								switch(floor($row['rating']/$row['numvotes'])) {
+									case 0:
+										$star_rating="<div name='rating' id='rating' class='rating'>";
+										$star_rating.="<span class='nostar'></span>";
+										$star_rating.="<span class='nostar'></span>";
+										$star_rating.="<span class='nostar'></span>";
+										$star_rating.="<span class='nostar'></span>";
+										$star_rating.="<span class='nostar'></span>";
+										$star_rating.="</div>";
+										break;
+									case 1:
+										$star_rating="<div name='rating' id='rating' class='rating'>";
+										$star_rating.="<span></span>";
+										$star_rating.="<span class='nostar'></span>";
+										$star_rating.="<span class='nostar'></span>";
+										$star_rating.="<span class='nostar'></span>";
+										$star_rating.="<span class='nostar'></span>";
+										$star_rating.="</div>";
+										break;
+									case 2:
+										$star_rating="<div name='rating' id='rating' class='rating'>";
+										$star_rating.="<span></span>";
+										$star_rating.="<span></span>";
+										$star_rating.="<span class='nostar'></span>";
+										$star_rating.="<span class='nostar'></span>";
+										$star_rating.="<span class='nostar'></span>";
+										$star_rating.="</div>";
+										break;
+									case 3:
+										$star_rating="<div name='rating' id='rating' class='rating'>";
+										$star_rating.="<span></span>";
+										$star_rating.="<span></span>";
+										$star_rating.="<span></span>";
+										$star_rating.="<span class='nostar'></span>";
+										$star_rating.="<span class='nostar'></span>";
+										$star_rating.="</div>";
+										break;
+									case 4:
+										$star_rating="<div name='rating' id='rating' class='rating'>";
+										$star_rating.="<span></span>";
+										$star_rating.="<span></span>";
+										$star_rating.="<span></span>";
+										$star_rating.="<span></span>";
+										$star_rating.="<span class='nostar'></span>";
+										$star_rating.="</div>";
+										break;
+									case 5:
+										$star_rating="<div name='rating' id='rating' class='rating'>";
+										$star_rating.="<span></span>";
+										$star_rating.="<span></span>";
+										$star_rating.="<span></span>";
+										$star_rating.="<span></span>";
+										$star_rating.="<span></span>";
+										$star_rating.="</div>";
+										break;
+									default: 
+										$star_rating = "unrated";
+										break;
+								}
+							}
+							//echo $star_rating;
+							echo "</div>";
+							echo "<div style='float:right; width: 460px; padding: 20px;'>";
+							echo "<h3>".$results[$i][2]."</h3>";
+							echo $results[$i][3];
+							echo "</div>";
+							echo "</div>";
+							echo "</a>";
+							echo "<div style='clear:both;'></div>";
+						}
 					}
 				}
 				if(isset($_GET['searchfield'])) {
-					echo "<h3 style='margin-top: 20px; text-align: center;'><a href='courses.php'>Want to search for more results? Click here</a></h3>";
+					echo "<h3 style='margin-top: 20px; text-align: center;'><a href='courses.php?search=".$_GET['searchfield']."'>Want to search for more results? Click here</a></h3>";
 				}
 			?>
 		</div>
