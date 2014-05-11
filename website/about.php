@@ -7,8 +7,19 @@
 <title>About | MoocDynasty</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="css/style.css" />
+<style type="text/css">
+ #blocks .inside {
+	margin-bottom: 20px;
+ }
+ #row1, #row2 {
+	text-align: center;
+ }
+ #row1 img, #row2 img {
+	max-width: 200px;
+	padding: 5px;
+ }
+</style>
 </head>
-
 <body>
 	<div id="header">
 		<div class="inside">
@@ -33,7 +44,7 @@
 			</ul>
 		</div>
  	 </div>
-	 <div id="blocks">
+	 <div id="blocks" style="background-image:url();">
 		<div class="title">
 			<h2>Meet The Team Behind MoocDynasty</h2>
 		</div>
@@ -64,6 +75,24 @@
 		    <div class="block1">
 				<h3>Romin Oushana</h3>
 			    <div class="crop"><img id="romin" src="https://scontent-b-sjc.xx.fbcdn.net/hphotos-frc3/t1.0-9/1384081_728057637207686_1197954403_n.jpg" alt="" ></div>
+			</div>
+		</div>
+		
+		<div class="title">
+			<h2>List of aggregated websites</h2>
+		</div>
+	 	<div class="inside">
+			<div id="row1">
+				<img src="images/canvas.jpg" title="Canvas" alt="Canvas" /> 
+				<img src="images/coursera.jpg" title="Coursera" alt="Coursera" /> 
+				<img src="images/edx.png" title="EDX" alt="EDX" /> 
+				<img src="images/futurelearn.png" title="FutureLearn" alt="FutureLearn" />
+			</div>
+			<div id="row2">
+				<img src="images/iversity.jpg" title="iversity" alt="iversity" /> 
+				<img src="images/novoed.jpg" title="NovoEd" alt="NovoEd" /> 
+				<img src="images/open2study.png" title="Open2Study" alt="Open2Study" /> 
+				<img src="images/udacity.jpg" title="Udacity" alt="Udacity" />
 			</div>
 		</div>
 	 </div>
