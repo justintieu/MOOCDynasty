@@ -1,7 +1,7 @@
 <?php
 	session_start();
 	
-	include_once("connect.php");
+	require_once('includes/connect.php');
 	if(isset($_GET["id"])) {
 		$course_id = $_GET["id"];
 	
@@ -238,10 +238,6 @@
 			</div>
 		</div>
 		<div style="clear: both;"></div>
-		<div id="footer">
-			<div class="inside">
-				<p>MoocDynasty &copy; 2014   | SJSU CS160</p>
-			</div>
-		</div>
+		<?php include('includes/footer'); ?>
 	 </body>
  </html>

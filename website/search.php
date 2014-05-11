@@ -1,6 +1,6 @@
 <?php	
-	require_once("connect.php");
 	session_start();
+	require_once('includes/connect.php');
 	$results = array();
 	if($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['searchfield']) && strlen($_GET['searchfield']) > 0) {
 		$searchfield = $_GET['searchfield'];
@@ -157,10 +157,6 @@
 				}
 			?>
 		</div>
-		<div id="footer">
-			<div class="inside">
-				<p>MoocDynasty &copy; 2014   | SJSU CS160</p>
-			</div>
-		</div>
+		<?php include('includes/footer'); ?>
 	</body>
 </html>

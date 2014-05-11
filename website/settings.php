@@ -3,7 +3,7 @@
 	if(!isset($_SESSION['id'])) {
 		header('location: index.php');
 	}
-	require_once('connect.php');
+	require_once('includes/connect.php');
 	$sql = "SELECT * FROM `users` where id=".$_SESSION['id']." LIMIT 1";
 	$first = "";
 	$last = "";
@@ -139,10 +139,6 @@
 			</form>
 		</div>
 	 </div>
-	 <div id="footer">
-	 	<div class="inside">
-			<p>MoocDynasty &copy; 2014   | SJSU CS160</p>
-		</div>
-	 </div>
+	 <?php include('includes/footer'); ?>
 </body>
 </html>

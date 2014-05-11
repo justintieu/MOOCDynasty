@@ -9,7 +9,7 @@
 	if($_SERVER["REQUEST_METHOD"] == "POST") {
 		$email = $_POST['email'];
 		if(strlen($_POST['pass']) > 0) {
-			require_once('connect.php');
+			require_once('includes/connect.php');
 			$sql = "SELECT * from `users` where email='".$email."' LIMIT 1";
 			$raw_results = $mysqli->query($sql);
 			if(mysqli_num_rows($raw_results) == 0) {
@@ -66,10 +66,6 @@
 		</div>
 		<?php echo $redirect; ?>
 	</div>
-	<div id="footer">
-		<div class="inside">
-			<p>MoocDynasty &copy; 2014   | SJSU CS160</p>
-		</div>
-	</div>
+	<?php include('includes/footer'); ?>
 </body>
 </html>

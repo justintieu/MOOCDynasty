@@ -3,7 +3,7 @@
 	if(!isset($_GET['id']) && !isset($_SESSION['id'])) {
 		header('location: index.php');
 	}
-	require_once('connect.php');
+	require_once('includes/connect.php');
 	$first = "";
 	$id = "";
 	if(isset($_SESSION['id'])) {
@@ -119,9 +119,6 @@
 		</div>
 	 </div>
 	 <div id="footer">
-	 	<div class="inside">
-			<p>MoocDynasty &copy; 2014   | SJSU CS160</p>
-		</div>
-	 </div>
+	 <?php include('includes/footer'); ?>
 </body>
 </html>

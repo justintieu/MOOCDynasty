@@ -1,6 +1,6 @@
 <?php	
 	session_start();
-	require_once("connect.php");
+	require_once('includes/connect.php');
 	$sql = "SELECT * FROM `averagerating` ORDER BY avgrate DESC LIMIT 7";
 	$raw_results = $mysqli->query($sql);
 	$topseven = array();
@@ -157,10 +157,6 @@
 				?>
 			</div>
 		 </div>
-		 <div id="footer">
-			<div class="inside">
-				<p>MoocDynasty &copy; 2014   | SJSU CS160</p>
-			</div>
-		 </div>
+		 <?php include('includes/footer'); ?>
 	</body>
 </html>

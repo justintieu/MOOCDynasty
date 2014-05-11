@@ -2,7 +2,7 @@
 	if ( !isset($_REQUEST['term']) ) {
 		exit;
 	}
-	require_once("connect.php");
+	require_once('includes/connect.php');
 	$sql = 'SELECT * FROM course_data where title like "'. $_REQUEST['term'] .'%" order by title asc limit 10';
 	$results = $mysqli->query($sql);
 	$data = array();

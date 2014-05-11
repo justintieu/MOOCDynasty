@@ -44,7 +44,7 @@
 		if(strlen($_POST['pass1']) >= 9 && strlen($_POST['pass2']) > 0 && $_POST['pass1'] === $_POST['pass2']) {
 			$pass = $_POST['pass1'];
 			
-			require_once("connect.php");
+			require_once('includes/connect.php');
 			$profileimage = "";
 			$bio = "Hi! My name is ".$first." and I am a new member to MoocDynasty. I hope to see you in one of my classes.";
 			$stmt = $mysqli->prepare("INSERT INTO users VALUES(?,?,?,?,?,?,?)");
@@ -110,10 +110,6 @@
 		</div>
 		<?php echo $redirect; ?>
 	</div>
-	<div id="footer">
-		<div class="inside">
-			<p>MoocDynasty &copy; 2014   | SJSU CS160</p>
-		</div>
-	</div>
+	<?php include('includes/footer'); ?>
 </body>
 </html>

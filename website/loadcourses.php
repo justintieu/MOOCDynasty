@@ -1,5 +1,5 @@
 <?php	
-	require_once("connect.php");
+	require_once('includes/connect.php');
 	
 	$raw_results1 = $mysqli->query("SELECT * FROM course_data ORDER BY id ASC");	
 	$results = "";
