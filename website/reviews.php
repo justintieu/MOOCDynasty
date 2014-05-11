@@ -197,6 +197,6 @@
 			</div>
 		</div>
 		<div style="clear: both;"></div>
-		<?php include('includes/footer'); ?>
+		<?php include('includes/footer.php'); ?>
 	 </body>
  </html>
