@@ -367,8 +367,30 @@ a {
 }
 #footer a:visited{text-decoration:none}
 #footer a:hover{text-decoration:underline}
-#footer p{
-	line-height:90px;
+#footer div{
+	margin: 0 auto;
 	padding:0 48px 0 0;
 	cursor:default;
 }
+
+#sjsucs-logo {
+	border-radius: 10px;
+}
+#sjsu-logo {
+	background: tan;
+	border-radius: 10px;
+	padding-bottom: 10px;
+	width: 100px;
+	height: 90px;
+	margin-top: 3px;
+}
+
+#sjsu span{
+	border-left: 1px solid #FFF;
+	border-right: 1px solid #FFF;
+	margin: 0px 5px 0px 5px;
+	padding: 90px 5px 0px 5px;
+}
+
+
+
