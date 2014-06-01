@@ -1,5 +1,5 @@
 <?php 
-	require_once('connect.php');
+	require_once('../includes/connect.php');
 	$sql = "SELECT * FROM `averagerating`";
 	echo $sql."<br/>";
 	$results = $mysqli->query($sql);
