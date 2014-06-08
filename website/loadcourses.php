@@ -14,6 +14,7 @@
 		$course_image = "";
 		$prof_image = "";
 		$prof_name = "";
+		$category = strlen($row['category']) == 0 ? "Other" : $row['category'];
 		if(substr($row['course_image'],0,2 === "//")) {
 			$course_image = "http:".$row['course_image'];
 		} else if(substr($row['course_image'],0,4) === "http") {
@@ -34,7 +35,7 @@
 		$course = array (
             '<a class="course_img" href="course.php?id=' . $id . '"><img src="' . $course_image . '" width="200px" height="150px" /></a>',  
             '<a class="course_img" href="course.php?id=' . $id . '">'.$row['title'].'</a>',
-            $row['category'],
+            $category,
             $start_date,
             $course_length,
             $prof_name,

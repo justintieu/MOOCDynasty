@@ -48,8 +48,8 @@
 		<div class="title">
 			<h2>Meet The Team Behind MoocDynasty</h2>
 		</div>
-	 	<div class="inside about">
-			<div style="width: 800px; margin: 10px auto; text-align: center;">
+	 	<div class="inside about" style="width: 750px;">
+			<div style="margin: 10px auto; text-align: center;">
 				We are GUI Productions from Spring 2014's CS 160 Section 5. This is our aggregated MOOC website, MoocDynasty, created with HTML, CSS, JavaScript, JQuery and PHP.
 			</div>
 		    <div class="block1">

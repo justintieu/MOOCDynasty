@@ -48,7 +48,7 @@
 			$profileimage = "";
 			$bio = "Hi! My name is ".$first." and I am a new member to MoocDynasty. I hope to see you in one of my classes.";
 			$stmt = $mysqli->prepare("INSERT INTO users VALUES(?,?,?,?,?,?,?)");
-			$stmt->bind_param('issss', $id, $first, $last, $email, $pass, $bio, $profileimage); 
+			$stmt->bind_param('issssss', $id, $first, $last, $email, $pass, $bio, $profileimage); 
 			$stmt->execute();
 						
 			$results = mysqli_stmt_affected_rows($stmt);

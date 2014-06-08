@@ -1,6 +1,7 @@
 <?php
 	session_start();
 	
+	header('Content-Type:text/html; charset=UTF-8');
 	require_once('includes/connect.php');
 	if(isset($_GET["id"])) {
 		$course_id = $_GET["id"];

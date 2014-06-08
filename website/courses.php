@@ -1,5 +1,7 @@
 <?php
 	session_start();
+	
+	header('Content-Type:text/html; charset=UTF-8');
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -28,6 +30,7 @@
 				  null
 				]
 			});
+			$('#dataTable_wrapper').css("width", "1200px");
 		});		
 		$.get("loadcourses.php", function(result) {
 			$("#dataTable").dataTable().fnAddData(JSON.parse(result));

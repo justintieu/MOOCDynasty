@@ -73,10 +73,15 @@ body{
 	margin:0 auto;
 }
 .banner {
-	background-image:url(http://www.educationplanner.org/images/landing-page/promo-students.jpg);
+	background-image:url(../images/students.jpg);
 	background-size: cover;
 	padding: 10em 0em 10em 0em;
 }
+
+#searchbar{
+    background-color: rgba(255,255,255,.7);
+}
+
 .searchform {
 	display: inline-block;
 	zoom: 1; /* ie7 hack for display:inline-block */
@@ -197,29 +202,42 @@ body{
 	margin: -30px;
 }
 .numone{
-	background-image: url(../images/block_bg.gif);
-	background-position: top left;
-	background-repeat: repeat;
-	background-size: 800px 600px;
-	width: 600px;
-	height: 400px;
-	float: left;
-	padding: 10px;
-	margin: 4px;
-	border: 1px solid #000;
-	text-align: center;
+    background-image: url(../images/block_bg.gif);
+    background-position: top left;
+    background-repeat: repeat;
+    background-size: 800px 600px;
+    width: 500px;
+    height: 380px;
+    float: left;
+    padding: 5px;
+    margin: 4px;
+    border: 1px solid #000;
+    text-align: center;
+    }
+.numtwo{
+    background-image: url(../images/block_bg.gif);
+    background-position: top left;
+    background-repeat: repeat;
+    background-size: 800px 600px;
+    width: 400px;
+    height: 180px;
+    float: left;
+    padding: 5px;
+    margin: 4px;
+    border: 1px solid #000;
+    text-align: center;
 }
 .block1{
-	background-image: url(../images/block_bg.gif);
-	background-position: top left;
-	background-repeat: repeat-x;
-	width: 285px;
-	height: 114px;
-	float: left;
-	padding: 10px;
-	margin: 4px;
-	border: 1px solid #000;
-	text-align: center;
+    background-image: url(../images/block_bg.gif);
+    background-position: top left;
+    background-repeat: repeat-x;
+    width: 215px;
+    height: 160px;
+    float: left;
+    padding: 5px;
+    margin: 4px;
+    border: 1px solid #000;
+    text-align: center;
 }
 .about >.block1 {
 	height: 150px;
@@ -377,7 +395,7 @@ a {
 	border-radius: 10px;
 }
 #sjsu-logo {
-	background: tan;
+	background: #EEE;
 	border-radius: 10px;
 	padding-bottom: 10px;
 	width: 100px;

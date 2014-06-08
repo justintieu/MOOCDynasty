@@ -148,11 +148,21 @@
 				</a>
 				<?php 
 					for($i = 2; $i <= 7; $i++) {
-						echo "<a href=\"course.php?id=".$topseven[$i]['course_id']."\"><div class=\"block1\">";
-						echo "<h3>".$i.". ".$topseven[$i]['title']."</h3><br/>";
-						echo $topseven[$i]['rating'];
-						echo "<img src=\"".$topseven[$i]['image']."\" alt=\"\" width=\"250px\" height=\"75px\"/>";
-						echo "</div></a>";
+						if($i==2 || $i == 3) {
+							echo "<a href=\"course.php?id=".$topseven[$i]['course_id']."\"><div class=\"numtwo\">";
+							echo "<h3>".$i.". ".$topseven[$i]['title']."</h3>";
+							echo $topseven[$i]['rating'];
+							echo "<div style=\"width:390px; height:140px; overflow: hidden; margin: 0 auto;\">";
+							echo "<img src=\"".$topseven[$i]['image']."\" alt=\"\" width=\"390px\" height=\"260px\"/>";
+							echo "</div>";
+							echo "</div></a>";
+						} else {
+							echo "<a href=\"course.php?id=".$topseven[$i]['course_id']."\"><div class=\"block1\">";
+							echo "<h3>".$i.". ".$topseven[$i]['title']."</h3><br/>";
+							echo $topseven[$i]['rating'];
+							echo "<img src=\"".$topseven[$i]['image']."\" alt=\"\" width=\"200px\" height=\"100px\"/>";
+							echo "</div></a>";
+						} 
 					}
 				?>
 			</div>
