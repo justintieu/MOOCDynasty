@@ -8,8 +8,8 @@
 		- [User Profiles](#user-content-user-profiles)
 		- [5-Star Rating System](#user-content-5-star-rating-system)
 		- [Top 7 Courses](#user-content-top-7-courses)
-		- 
-#MOOCDynasty
+
+##MOOCDynasty
 Massive open online courses have become a key part of people’s lives in society today. As the cost of education increases, there are people, such as professionals and students, trying to find additional resources either to learn new skills, supplement what they are doing in their jobs, or help with further understanding of a specific subject.
  
 With a new website that aggregates different popular massive open online course websites within a single search, students and professionals will be able to find a particular course more efficiently with additional innovative features such as user profiles, five star rating system, top seven courses, and auto-complete.
