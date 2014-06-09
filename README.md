@@ -1,5 +1,14 @@
-[TOC]
+**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [MOOCDynasty](#user-content-moocdynasty)
+	- [Aggregated Websites](#user-content-aggregated-websites)
+	- [Features](#user-content-features)
+		- [One Common Search/Browse, One Common Filter/Sort Results](#user-content-one-common-searchbrowse-one-common-filtersort-results)
+		- [Auto-complete](#user-content-auto-complete)
+		- [User Profiles](#user-content-user-profiles)
+		- [5-Star Rating System](#user-content-5-star-rating-system)
+		- [Top 7 Courses](#user-content-top-7-courses)
+		- 
 #MOOCDynasty
 Massive open online courses have become a key part of people’s lives in society today. As the cost of education increases, there are people, such as professionals and students, trying to find additional resources either to learn new skills, supplement what they are doing in their jobs, or help with further understanding of a specific subject.
  
