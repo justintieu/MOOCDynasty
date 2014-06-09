@@ -60,41 +60,44 @@ Within the first parameter, the autocomplete function accepts JSON (which was cr
 
 ###User Profiles
 Here is the SQL table used for Users. 
-Field  | Type
-------------- | -------------
-id  | int(11)
-first | varchar(30)
-last | varchar(30)
-email | varchar(128)
-password | varchar(30)
-bio | text
-image | text
+
+| Field  | Type |
+| ------------- | ------------- |
+| id  | int(11) |
+| first | varchar(30) |
+| last | varchar(30) |
+| email | varchar(128) |
+| password | varchar(30) |
+| bio | text |
+| image | text |
 
 During registration, there will be different default values set for values not asked. The form will simply be inserted and updated if necessary after the user is logged in.
 
 
 ###5-Star Rating System
 Here is the SQL table used for the 5 star rating system. 
-Field  | Type
-------------- | -------------
-course_id | int(4)
-title | text
-rating | double
-review | text
-student_id | int(4)
-time_submitted | datetime
+
+| Field  | Type |
+| ------------- | ------------- |
+| course_id | int(4) |
+| title | text |
+| rating | double |
+| review | text |
+| student_id | int(4) |
+| time_submitted | datetime |
 
 The 5-star rating system isn't very complex. It uses a form that takes in the necessary information and inserts itself into the table. 
 
 ###Top 7 Courses
 Here is the SQL table used for Top 7 Courses. 
-Field  | Type
-------------- | -------------
-id  | int(11)
-course_id | int(11)
-rating | int(11)
-numvotes | int(11)
-avgrate | double
+
+| Field  | Type |
+| ------------- | ------------- |
+| id  | int(11) |
+| course_id | int(11) |
+| rating | int(11) |
+| numvotes | int(11) |
+| avgrate | double |
 
 The Top 7 Courses features checks if the course already exists in this table. If the course already exists, there will be an update, else there will be an insert. 
 
