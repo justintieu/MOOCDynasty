@@ -8,6 +8,7 @@
 		- [User Profiles](#user-content-user-profiles)
 		- [5-Star Rating System](#user-content-5-star-rating-system)
 		- [Top 7 Courses](#user-content-top-7-courses)
+	- [Warning](#user-content-warning)
 
 ##MOOCDynasty
 Massive open online courses have become a key part of people’s lives in society today. As the cost of education increases, there are people, such as professionals and students, trying to find additional resources either to learn new skills, supplement what they are doing in their jobs, or help with further understanding of a specific subject.
@@ -71,7 +72,7 @@ Here is the SQL table used for Users.
 | bio | text |
 | image | text |
 
-During registration, there will be different default values set for values not asked. The form will simply be inserted and updated if necessary after the user is logged in.
+During registration, there will be different default values set for values not asked. The form will simply be inserted and updated if necessary after the user is logged in. 
 
 
 ###5-Star Rating System
@@ -102,7 +103,7 @@ Here is the SQL table used for Top 7 Courses.
 The Top 7 Courses features checks if the course already exists in this table. If the course already exists, there will be an update, else there will be an insert. 
 
 
-
-
+##Warning
+This code was not written optimally, which leaves this website vulnerable to external attacks. I recommend looking into prepared statements for queries and methods that allow encryption of passwords before inserted into the database. 
 
 
